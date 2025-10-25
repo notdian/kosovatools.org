@@ -93,10 +93,6 @@ export function StackedKeySelector({
     }
   }, [filteredTotals, normalizedSearch, onSelectedKeysChange, totals])
 
-  const handleClearSelected = React.useCallback(() => {
-    onSelectedKeysChange([])
-  }, [onSelectedKeysChange])
-
   const others = React.useMemo(() => {
     const excludedSet = new Set(excludedKeys)
     const base = totals.filter((item) => !selectedKeys.includes(item.key))
@@ -153,22 +149,6 @@ export function StackedKeySelector({
             >
               Top {topCount}
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleSelectAll}
-              className="h-7 px-2 text-xs"
-            >
-              Select all
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleClearSelected}
-              className="h-7 px-2 text-xs"
-            >
-              Unselect all
-            </Button>
           </div>
           <input
             type="search"
@@ -213,43 +193,47 @@ export function StackedKeySelector({
         </div>
         <div
           className={
-            "flex flex-1 flex-col gap-3 rounded-md border border-dashed border-border/50 p-2 transition-opacity " +
-            (otherDisabled ? "opacity-60" : "opacity-100")
+            "flex flex-1 flex-col gap-3 rounded-md border border-dashed border-border/50 p-2 transition-opacity "
           }
         >
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              className="h-3.5 w-3.5 accent-primary"
-              checked={includeOther}
-              onChange={(event) => onIncludeOtherChange(event.target.checked)}
-            />
-            <span className="text-muted-foreground">Show “Other” bucket</span>
-          </label>
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="font-medium text-muted-foreground">{promoteLabel}</span>
-            {onExcludedKeysChange && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleClearExcluded}
-                className="h-7 px-2 text-xs"
-                disabled={otherDisabled || excludedKeys.length === 0}
-              >
-                Unselect all
-              </Button>
-            )}
+            <div>
+              <input
+                type="checkbox"
+                className="h-3.5 w-3.5 accent-primary mr-1"
+                checked={includeOther}
+                onChange={(event) => onIncludeOtherChange(event.target.checked)}
+              />
+              <span className="font-medium text-muted-foreground">{promoteLabel}</span>
+            </div>
+            <div
+              className={
+                (otherDisabled ? "opacity-60" : "opacity-100")
+              }
+            >
+              {onExcludedKeysChange && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleClearExcluded}
+                  className="h-7 px-2 text-xs"
+                  disabled={otherDisabled || excludedKeys.length === 0}
+                >
+                  Unselect all
+                </Button>
+              )}
+            </div>
+            <input
+              type="search"
+              value={otherSearchTerm}
+              onChange={(event) => setOtherSearchTerm(event.target.value)}
+              placeholder={excludedSearchLabel}
+              disabled={otherDisabled}
+              className={
+                "h-8 w-full rounded-md border border-border bg-background px-3 text-xs focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-70"
+              }
+            />
           </div>
-          <input
-            type="search"
-            value={otherSearchTerm}
-            onChange={(event) => setOtherSearchTerm(event.target.value)}
-            placeholder={excludedSearchLabel}
-            disabled={otherDisabled}
-            className={
-              "h-8 w-full rounded-md border border-border bg-background px-3 text-xs focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-70"
-            }
-          />
           <div
             className={
               "max-h-40 overflow-y-auto rounded-md border bg-background p-2 " +

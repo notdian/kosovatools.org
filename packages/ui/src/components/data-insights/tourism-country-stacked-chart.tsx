@@ -65,18 +65,21 @@ export function TourismCountryStackedChart({
   const [excludedKeys, setExcludedKeys] = React.useState<string[]>([])
 
   React.useEffect(() => {
-    if (!totals.length) {
-      setSelectedKeys([])
-      return
-    }
-    const validKeys = new Set(totals.map((item) => item.key))
-    const nextKeys = selectedKeys.filter((key) => validKeys.has(key))
-    if (!nextKeys.length) {
-      setSelectedKeys(defaultKeys)
-    } else if (nextKeys.length !== selectedKeys.length) {
-      setSelectedKeys(nextKeys)
-    }
-  }, [totals, defaultKeys, selectedKeys])
+    setSelectedKeys((current) => {
+      if (!totals.length) {
+        return []
+      }
+      const validKeys = new Set(totals.map((item) => item.key))
+      const next = current.filter((key) => validKeys.has(key))
+      if (next.length === current.length) {
+        return current
+      }
+      if (!next.length) {
+        return defaultKeys
+      }
+      return next
+    })
+  }, [totals, defaultKeys])
 
   React.useEffect(() => {
     const validKeys = new Set(totals.map((item) => item.key))

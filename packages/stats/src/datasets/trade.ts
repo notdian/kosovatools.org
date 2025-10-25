@@ -15,6 +15,7 @@ const PARTNER_LABEL_OVERRIDES: Record<string, string> = {
   "XX:": "Unknown (XX)",
   "XY:": "Unknown (XY)",
   "XZ:": "Unknown (XZ)",
+  "XS:": "Serbia",
   "YU:": "Serbia and Montenegro",
   "ZZ:": "Unknown (ZZ)",
 }
