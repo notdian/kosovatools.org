@@ -49,6 +49,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Fetch customs dataset
+        run: pnpm --filter @workspace/customs-data fetch-tarrifs
+        env:
+          CUSTOMS_DATA_SOURCE_URL: ${{ secrets.CUSTOMS_DATA_SOURCE_URL }}
+
+      - name: Trim customs dataset
+        run: pnpm --filter @workspace/customs-data trim-tarrifs
+
       - name: Build Turborepo packages
         run: pnpm turbo run build --filter=web...
         env:
