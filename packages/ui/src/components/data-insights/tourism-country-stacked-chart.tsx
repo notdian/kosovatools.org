@@ -62,6 +62,7 @@ export function TourismCountryStackedChart({
 
   const [selectedKeys, setSelectedKeys] = React.useState<string[]>(defaultKeys)
   const [includeOther, setIncludeOther] = React.useState(true)
+  const [excludedKeys, setExcludedKeys] = React.useState<string[]>([])
 
   React.useEffect(() => {
     if (!totals.length) {
@@ -76,6 +77,14 @@ export function TourismCountryStackedChart({
       setSelectedKeys(nextKeys)
     }
   }, [totals, defaultKeys, selectedKeys])
+
+  React.useEffect(() => {
+    const validKeys = new Set(totals.map((item) => item.key))
+    setExcludedKeys((previous) => {
+      const next = previous.filter((key) => validKeys.has(key))
+      return next.length === previous.length ? previous : next
+    })
+  }, [totals])
 
   const handleSelectedKeysChange = React.useCallback((keys: string[]) => {
     setSelectedKeys(keys)
@@ -92,6 +101,7 @@ export function TourismCountryStackedChart({
       metric,
       includeOther,
       selectedKeys,
+      excludedKeys,
     })
 
     return buildStackedChartView({
@@ -101,7 +111,7 @@ export function TourismCountryStackedChart({
       periodFormatter: (period) =>
         axisFormatter.format(new Date(`${period}-01`)),
     })
-  }, [data, months, top, metric, includeOther, selectedKeys])
+  }, [data, months, top, metric, includeOther, selectedKeys, excludedKeys])
 
   if (!chartData.length || !keyMap.length) {
     return (
@@ -148,7 +158,9 @@ export function TourismCountryStackedChart({
         searchPlaceholder="Search countries..."
         includeOther={includeOther}
         onIncludeOtherChange={handleIncludeOtherChange}
-        promoteLabel="Promote countries from “Other” bucket"
+        promoteLabel="Exclude countries from “Other” bucket"
+        excludedKeys={excludedKeys}
+        onExcludedKeysChange={setExcludedKeys}
       />
       <ChartContainer config={config} className="h-[360px] !aspect-auto">
         <AreaChart data={chartData}>

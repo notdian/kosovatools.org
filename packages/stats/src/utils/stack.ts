@@ -156,6 +156,7 @@ export function buildStackSeries<TRecord, TKey extends string>(
   const totalsByKey = buildTotalsMap(records, accessors, periodSet)
 
   const baseTotals = summarizeStackTotals(records, accessors, options)
+  const excludedSet = new Set(options.excludedKeys ?? [])
 
   const availableKeys = baseTotals.map((item) => item.key)
   const availableSet = new Set(availableKeys)
@@ -195,6 +196,9 @@ export function buildStackSeries<TRecord, TKey extends string>(
     for (const row of rows) {
       const key = accessors.key(row)
       const value = toNumber(accessors.value(row))
+      if (excludedSet.has(key)) {
+        continue
+      }
       if (primarySet.has(key)) {
         values[key] = (values[key] ?? 0) + value
       } else if (includeOther) {

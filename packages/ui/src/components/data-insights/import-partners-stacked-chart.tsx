@@ -54,6 +54,7 @@ export function ImportPartnersStackedChart({
 
   const [selectedKeys, setSelectedKeys] = React.useState<string[]>(defaultKeys)
   const [includeOther, setIncludeOther] = React.useState(false)
+  const [excludedKeys, setExcludedKeys] = React.useState<string[]>([])
 
   React.useEffect(() => {
     if (!totals.length) {
@@ -69,6 +70,14 @@ export function ImportPartnersStackedChart({
     }
   }, [totals, defaultKeys, selectedKeys])
 
+  React.useEffect(() => {
+    const validKeys = new Set(totals.map((item) => item.key))
+    setExcludedKeys((previous) => {
+      const next = previous.filter((key) => validKeys.has(key))
+      return next.length === previous.length ? previous : next
+    })
+  }, [totals])
+
   const handleSelectedKeysChange = React.useCallback((keys: string[]) => {
     setSelectedKeys(keys)
   }, [])
@@ -83,6 +92,7 @@ export function ImportPartnersStackedChart({
       top,
       includeOther,
       selectedKeys,
+      excludedKeys,
     })
 
     return buildStackedChartView({
@@ -92,7 +102,7 @@ export function ImportPartnersStackedChart({
       periodFormatter: (period) =>
         axisFormatter.format(new Date(`${period}-01`)),
     })
-  }, [data, months, top, includeOther, selectedKeys])
+  }, [data, months, top, includeOther, selectedKeys, excludedKeys])
 
   if (!chartData.length || !keyMap.length) {
     return (
@@ -116,7 +126,9 @@ export function ImportPartnersStackedChart({
         searchPlaceholder="Search countries..."
         includeOther={includeOther}
         onIncludeOtherChange={handleIncludeOtherChange}
-        promoteLabel="Promote countries from “Other” bucket"
+        promoteLabel="Exclude countries from “Other” bucket"
+        excludedKeys={excludedKeys}
+        onExcludedKeysChange={setExcludedKeys}
       />
       <ChartContainer config={config} className="h-[360px] !aspect-auto">
         <AreaChart data={chartData}>

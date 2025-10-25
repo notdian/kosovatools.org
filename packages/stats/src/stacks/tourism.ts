@@ -19,6 +19,7 @@ export type CountryStackOptions = {
   includeOther?: boolean
   metric?: TourismMetric
   selectedKeys?: string[]
+  excludedKeys?: string[]
 }
 
 function accessorsForMetric(metric: TourismMetric) {
@@ -38,6 +39,7 @@ function buildOptions(
     top: options.top,
     includeOther: options.includeOther,
     selectedKeys: options.selectedKeys,
+    excludedKeys: options.excludedKeys,
     labelForKey: (key: string) => key,
   }
 }

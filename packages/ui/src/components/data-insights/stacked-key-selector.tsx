@@ -21,6 +21,9 @@ export type StackedKeySelectorProps = {
   includeOther: boolean
   onIncludeOtherChange: (next: boolean) => void
   promoteLabel?: string
+  excludedKeys?: string[]
+  onExcludedKeysChange?: (keys: string[]) => void
+  excludedSearchPlaceholder?: string
 }
 
 export function StackedKeySelector({
@@ -33,11 +36,19 @@ export function StackedKeySelector({
   searchPlaceholder,
   includeOther,
   onIncludeOtherChange,
-  promoteLabel = "Promote entries from \u201COther\u201D bucket",
+  promoteLabel = "Exclude entries from \u201COther\u201D bucket",
+  excludedKeys: controlledExcludedKeys,
+  onExcludedKeysChange,
+  excludedSearchPlaceholder,
 }: StackedKeySelectorProps) {
   const [searchTerm, setSearchTerm] = React.useState("")
+  const [otherSearchTerm, setOtherSearchTerm] = React.useState("")
 
   const normalizedSearch = searchTerm.trim().toLowerCase()
+  const normalizedOtherSearch = otherSearchTerm.trim().toLowerCase()
+  const otherDisabled = !includeOther
+  const excludedKeys = controlledExcludedKeys ?? []
+  const excludedSearchLabel = excludedSearchPlaceholder ?? searchPlaceholder
 
   const filteredTotals = React.useMemo(() => {
     if (!normalizedSearch) {
@@ -54,9 +65,14 @@ export function StackedKeySelector({
       const next = isSelected
         ? selectedKeys.filter((item) => item !== key)
         : [...selectedKeys, key]
+      if (!isSelected && excludedKeys.includes(key)) {
+        onExcludedKeysChange?.(
+          excludedKeys.filter((item) => item !== key)
+        )
+      }
       onSelectedKeysChange(next.length ? next : [key])
     },
-    [selectedKeys, onSelectedKeysChange]
+    [selectedKeys, onSelectedKeysChange, excludedKeys, onExcludedKeysChange]
   )
 
   const handleSelectTop = React.useCallback(() => {
@@ -77,124 +93,215 @@ export function StackedKeySelector({
     }
   }, [filteredTotals, normalizedSearch, onSelectedKeysChange, totals])
 
+  const handleClearSelected = React.useCallback(() => {
+    onSelectedKeysChange([])
+  }, [onSelectedKeysChange])
+
   const others = React.useMemo(() => {
-    return totals.filter((item) => !selectedKeys.includes(item.key))
-  }, [totals, selectedKeys])
+    const excludedSet = new Set(excludedKeys)
+    const base = totals.filter((item) => !selectedKeys.includes(item.key))
+    base.sort((a, b) => {
+      const aExcluded = excludedSet.has(a.key)
+      const bExcluded = excludedSet.has(b.key)
+      if (aExcluded === bExcluded) return 0
+      return aExcluded ? -1 : 1
+    })
+    return base
+  }, [totals, selectedKeys, excludedKeys])
 
   const visibleOthers = React.useMemo(() => {
-    if (!normalizedSearch) {
+    if (!normalizedOtherSearch) {
       return others
     }
     return others.filter((item) =>
-      item.label.toLowerCase().includes(normalizedSearch)
+      item.label.toLowerCase().includes(normalizedOtherSearch)
     )
-  }, [others, normalizedSearch])
+  }, [others, normalizedOtherSearch])
 
-  const handlePromoteOther = React.useCallback(
+  const handleToggleExcluded = React.useCallback(
     (key: string) => {
-      if (selectedKeys.includes(key)) {
+      if (otherDisabled) {
         return
       }
-      onSelectedKeysChange([...selectedKeys, key])
+      const isExcluded = excludedKeys.includes(key)
+      const next = isExcluded
+        ? excludedKeys.filter((item) => item !== key)
+        : [...excludedKeys, key]
+      onExcludedKeysChange?.(next)
     },
-    [onSelectedKeysChange, selectedKeys]
+    [otherDisabled, excludedKeys, onExcludedKeysChange]
   )
 
+  const handleClearExcluded = React.useCallback(() => {
+    if (otherDisabled) {
+      return
+    }
+    onExcludedKeysChange?.([])
+  }, [otherDisabled, onExcludedKeysChange])
+
   return (
-    <div className="flex flex-col gap-3 rounded-lg border bg-muted/30 p-3 text-xs">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="font-medium text-muted-foreground">{selectionLabel}</span>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleSelectTop}
-          className="h-7 px-2 text-xs"
-        >
-          Top {topCount}
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleSelectAll}
-          className="h-7 px-2 text-xs"
-        >
-          Select all
-        </Button>
-      </div>
-      <input
-        type="search"
-        value={searchTerm}
-        onChange={(event) => setSearchTerm(event.target.value)}
-        placeholder={searchPlaceholder}
-        className="h-8 w-full rounded-md border border-border bg-background px-3 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
-      />
-      <div className="max-h-40 overflow-y-auto rounded-md border bg-background p-2">
-        <div className="grid gap-1">
-          {filteredTotals.map((item) => {
-            const checked = selectedKeys.includes(item.key)
-            return (
-              <button
-                key={item.key}
-                type="button"
-                onClick={() => handleToggleKey(item.key)}
-                className={
-                  "flex w-full items-center justify-between gap-3 rounded px-2 py-1 text-left transition-colors " +
-                  (checked ? "bg-primary/10 text-primary" : "hover:bg-muted")
-                }
-              >
-                <span className="flex items-center gap-2">
-                  <span
-                    className={
-                      "h-2.5 w-2.5 rounded-full border " +
-                      (checked
-                        ? "border-primary bg-primary"
-                        : "border-border")
-                    }
-                  />
-                  <span>{item.label}</span>
-                </span>
-                <span className="font-mono text-muted-foreground">
-                  {formatTotal(item.total)}
-                </span>
-              </button>
-            )
-          })}
-        </div>
-      </div>
-      <label className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          className="h-3.5 w-3.5 accent-primary"
-          checked={includeOther}
-          onChange={(event) => onIncludeOtherChange(event.target.checked)}
-        />
-        <span className="text-muted-foreground">Show “Other” bucket</span>
-      </label>
-      {includeOther && visibleOthers.length > 0 && (
-        <div className="grid gap-2">
-          <span className="font-medium text-muted-foreground">{promoteLabel}</span>
-          <div className="max-h-32 overflow-y-auto rounded-md border bg-background p-2">
+    <div className="rounded-lg border bg-muted/30 p-3 text-xs">
+      <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-6">
+        <div className="flex flex-1 flex-col gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-medium text-muted-foreground">{selectionLabel}</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSelectTop}
+              className="h-7 px-2 text-xs"
+            >
+              Top {topCount}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSelectAll}
+              className="h-7 px-2 text-xs"
+            >
+              Select all
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClearSelected}
+              className="h-7 px-2 text-xs"
+            >
+              Unselect all
+            </Button>
+          </div>
+          <input
+            type="search"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder={searchPlaceholder}
+            className="h-8 w-full rounded-md border border-border bg-background px-3 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+          <div className="max-h-40 overflow-y-auto rounded-md border bg-background p-2">
             <div className="grid gap-1">
-              {visibleOthers.map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  onClick={() => handlePromoteOther(item.key)}
-                  className="flex w-full items-center justify-between gap-3 rounded px-2 py-1 text-left transition-colors hover:bg-muted"
-                >
-                  <span className="flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full border border-border" />
-                    <span>{item.label}</span>
-                  </span>
-                  <span className="font-mono text-muted-foreground">
-                    {formatTotal(item.total)}
-                  </span>
-                </button>
-              ))}
+              {filteredTotals.map((item) => {
+                const checked = selectedKeys.includes(item.key)
+                return (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => handleToggleKey(item.key)}
+                    className={
+                      "flex w-full items-center justify-between gap-3 rounded px-2 py-1 text-left transition-colors " +
+                      (checked ? "bg-primary/10 text-primary" : "hover:bg-muted")
+                    }
+                  >
+                    <span className="flex items-center gap-2">
+                      <span
+                        className={
+                          "h-2.5 w-2.5 rounded-full border " +
+                          (checked
+                            ? "border-primary bg-primary"
+                            : "border-border")
+                        }
+                      />
+                      <span>{item.label}</span>
+                    </span>
+                    <span className="font-mono text-muted-foreground">
+                      {formatTotal(item.total)}
+                    </span>
+                  </button>
+                )
+              })}
             </div>
           </div>
         </div>
-      )}
+        <div
+          className={
+            "flex flex-1 flex-col gap-3 rounded-md border border-dashed border-border/50 p-2 transition-opacity " +
+            (otherDisabled ? "opacity-60" : "opacity-100")
+          }
+        >
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              className="h-3.5 w-3.5 accent-primary"
+              checked={includeOther}
+              onChange={(event) => onIncludeOtherChange(event.target.checked)}
+            />
+            <span className="text-muted-foreground">Show “Other” bucket</span>
+          </label>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="font-medium text-muted-foreground">{promoteLabel}</span>
+            {onExcludedKeysChange && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleClearExcluded}
+                className="h-7 px-2 text-xs"
+                disabled={otherDisabled || excludedKeys.length === 0}
+              >
+                Unselect all
+              </Button>
+            )}
+          </div>
+          <input
+            type="search"
+            value={otherSearchTerm}
+            onChange={(event) => setOtherSearchTerm(event.target.value)}
+            placeholder={excludedSearchLabel}
+            disabled={otherDisabled}
+            className={
+              "h-8 w-full rounded-md border border-border bg-background px-3 text-xs focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-70"
+            }
+          />
+          <div
+            className={
+              "max-h-40 overflow-y-auto rounded-md border bg-background p-2 " +
+              (otherDisabled ? "pointer-events-none" : "")
+            }
+            aria-disabled={otherDisabled}
+          >
+            <div className="grid gap-1">
+              {visibleOthers.map((item) => {
+                const isExcluded = excludedKeys.includes(item.key)
+                return (
+                  <button
+                    key={item.key}
+                    type="button"
+                    disabled={otherDisabled}
+                    onClick={() => handleToggleExcluded(item.key)}
+                    className={
+                      "flex w-full items-center justify-between gap-3 rounded px-2 py-1 text-left transition-colors " +
+                      (otherDisabled
+                        ? "cursor-not-allowed opacity-70"
+                        : isExcluded
+                          ? "bg-primary/10 text-primary"
+                          : "hover:bg-muted")
+                    }
+                    aria-pressed={isExcluded}
+                  >
+                    <span className="flex items-center gap-2">
+                      <span
+                        className={
+                          "h-2.5 w-2.5 rounded-full border " +
+                          (isExcluded
+                            ? "border-primary bg-primary"
+                            : "border-border")
+                        }
+                      />
+                      <span>{item.label}</span>
+                    </span>
+                    <span className="font-mono text-muted-foreground">
+                      {formatTotal(item.total)}
+                    </span>
+                  </button>
+                )
+              })}
+              {visibleOthers.length === 0 && (
+                <span className="px-2 py-1 text-muted-foreground">
+                  No entries match your search.
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
