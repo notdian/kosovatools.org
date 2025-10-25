@@ -94,7 +94,7 @@ export class CustomsDataService {
         message: "Duke ngarkuar të dhënat e tarifave...",
       })
 
-      const dataModule = await import("@data/tarrifs.json")
+      const dataModule = await import("../data/tarrifs.json")
       const data = (dataModule as { default: CustomsRecord[] }).default
       const total = data.length
 

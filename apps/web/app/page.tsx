@@ -19,11 +19,11 @@ export default function Page() {
           <Button asChild size="lg">
             <Link href="/customs-codes">Browse customs codes</Link>
           </Button>
-          <Button asChild size="lg" disabled variant="secondary">
-            <Link href="/wage-calculator">Plan your salary</Link>
+          <Button asChild size="lg" variant="secondary">
+            <Link href="/data-insights">See data insights</Link>
           </Button>
           <Button asChild size="lg" variant="ghost">
-            <Link href="/data-insights">See data insights</Link>
+            <Link href="#">Plan your salary</Link>
           </Button>
         </div>
       </div>

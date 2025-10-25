@@ -1,17 +1,12 @@
-"use client"
-
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 
 import {
   electricityMonthly,
-  fuelBalances,
-  fuelLabels,
   kasSources,
   tradeImportsByPartner,
   tradeImportsMonthly,
   tourismByCountry,
   tourismByRegion,
-  type FuelKey,
   type TradeImportRecord,
 } from "@workspace/stats"
 import {
