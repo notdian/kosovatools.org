@@ -13,13 +13,13 @@ export default function Page() {
           Practical tools for Kosovo residents, powered by open data.
         </h1>
         <p className="text-balance text-sm text-muted-foreground sm:text-base">
-          Explore customs codes, estimate take-home pay, and visualize Republic of Kosovo statistics—all built with Next.js and shadcn/ui.
+          Explore customs codes, estimate take-home pay, and visualize Republic of Kosovo statistics
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Button asChild size="lg">
             <Link href="/customs-codes">Browse customs codes</Link>
           </Button>
-          <Button asChild size="lg" variant="secondary">
+          <Button asChild size="lg" disabled variant="secondary">
             <Link href="/wage-calculator">Plan your salary</Link>
           </Button>
           <Button asChild size="lg" variant="ghost">
