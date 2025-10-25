@@ -776,7 +776,7 @@ def fetch_tourism_country(out_dir: Path, months: Optional[int]):
 
 def main():
     ap = argparse.ArgumentParser(description="Fetch Kosovo ASKdata PxWeb series and save JSON")
-    ap.add_argument("--out", help="Override output directory (defaults vary by profile)")
+    ap.add_argument("--out", help="Override output directory")
     ap.add_argument("--months", type=int, help="Fetch only the last N months (default: 24)")
     ap.add_argument("--all", action="store_true", help="Fetch all available months")
     ap.add_argument("--partners", help="Comma-separated partner list (e.g. AL,RS,DE) or ALL for all partners")
@@ -798,7 +798,6 @@ def main():
             partners = ["ALL"]
 
     print("ASKdata PxWeb consolidator")
-    print("  profile:", args.profile)
     print("  out     :", out_dir)
     print("  months  :", months if months is not None else "ALL")
     print("  partners:", ",".join(partners) if partners else "(none)")
