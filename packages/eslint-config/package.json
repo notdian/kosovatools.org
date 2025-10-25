@@ -10,6 +10,8 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.4.5",
+    "@types/chroma-js": "^3.1.1",
+    "@types/d3-scale": "^4.0.9",
     "@typescript-eslint/eslint-plugin": "^8.39.0",
     "@typescript-eslint/parser": "^8.39.0",
     "eslint": "^9.32.0",
@@ -21,5 +23,10 @@
     "globals": "^15.15.0",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.39.0"
+  },
+  "dependencies": {
+    "chroma-js": "^3.1.2",
+    "d3-scale": "^4.0.2",
+    "recharts": "2.15.4"
   }
 }
