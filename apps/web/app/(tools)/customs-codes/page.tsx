@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card"
 import { CustomsExplorer } from "@workspace/ui/components/customs-codes"
-import { AlertTriangle, Github } from "lucide-react"
+import { AlertTriangle } from "lucide-react"
 
 const buildTime = process.env.NEXT_PUBLIC_BUILD_TIME ?? "—"
 
@@ -61,18 +61,6 @@ export default function CustomsCodesPage() {
       </section>
 
       <CustomsExplorer />
-
-      <footer className="border-t border-border/60 pt-6 text-xs text-muted-foreground sm:text-sm">
-        <a
-          className="inline-flex items-center gap-2 font-medium text-foreground transition hover:text-primary"
-          href="https://github.com/notdian/kosovo_customs_explorer"
-          rel="noreferrer"
-          target="_blank"
-        >
-          <Github aria-hidden className="h-4 w-4" />
-          Shih kodin burimor në GitHub
-        </a>
-      </footer>
     </article>
   )
 }
