@@ -50,14 +50,21 @@ export function StackedKeySelector({
   const excludedKeys = controlledExcludedKeys ?? []
   const excludedSearchLabel = excludedSearchPlaceholder ?? searchPlaceholder
 
+  const totalsWithValues = React.useMemo(
+    () => totals.filter((item) => item.total !== 0),
+    [totals]
+  )
+
+  const hasZeroTotals = totalsWithValues.length !== totals.length
+
   const filteredTotals = React.useMemo(() => {
     if (!normalizedSearch) {
-      return totals
+      return totalsWithValues
     }
-    return totals.filter((item) =>
+    return totalsWithValues.filter((item) =>
       item.label.toLowerCase().includes(normalizedSearch)
     )
-  }, [totals, normalizedSearch])
+  }, [totalsWithValues, normalizedSearch])
 
   const handleToggleKey = React.useCallback(
     (key: string) => {
@@ -76,26 +83,28 @@ export function StackedKeySelector({
   )
 
   const handleSelectTop = React.useCallback(() => {
-    const source = normalizedSearch ? filteredTotals : totals
+    const source = normalizedSearch ? filteredTotals : totalsWithValues
     const next = source
       .slice(0, Math.max(1, topCount))
       .map((item) => item.key)
     if (next.length) {
       onSelectedKeysChange(next)
     }
-  }, [filteredTotals, normalizedSearch, onSelectedKeysChange, topCount, totals])
+  }, [filteredTotals, normalizedSearch, onSelectedKeysChange, topCount, totalsWithValues])
 
   const handleSelectAll = React.useCallback(() => {
-    const source = normalizedSearch ? filteredTotals : totals
+    const source = normalizedSearch ? filteredTotals : totalsWithValues
     const next = source.map((item) => item.key)
     if (next.length) {
       onSelectedKeysChange(next)
     }
-  }, [filteredTotals, normalizedSearch, onSelectedKeysChange, totals])
+  }, [filteredTotals, normalizedSearch, onSelectedKeysChange, totalsWithValues])
 
   const others = React.useMemo(() => {
     const excludedSet = new Set(excludedKeys)
-    const base = totals.filter((item) => !selectedKeys.includes(item.key))
+    const base = totalsWithValues.filter(
+      (item) => !selectedKeys.includes(item.key)
+    )
     base.sort((a, b) => {
       const aExcluded = excludedSet.has(a.key)
       const bExcluded = excludedSet.has(b.key)
@@ -103,7 +112,7 @@ export function StackedKeySelector({
       return aExcluded ? -1 : 1
     })
     return base
-  }, [totals, selectedKeys, excludedKeys])
+  }, [totalsWithValues, selectedKeys, excludedKeys])
 
   const visibleOthers = React.useMemo(() => {
     if (!normalizedOtherSearch) {
@@ -286,6 +295,12 @@ export function StackedKeySelector({
           </div>
         </div>
       </div>
+      {hasZeroTotals && (
+        <p className="mt-3 text-[11px] text-muted-foreground">
+          Entries with zero totals are hidden from the inclusion and exclusion
+          lists.
+        </p>
+      )}
     </div>
   )
 }
