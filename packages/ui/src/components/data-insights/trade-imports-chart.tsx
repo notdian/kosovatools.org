@@ -48,6 +48,8 @@ export function TradeImportsChart({
   data: TradeImportRecord[]
   months?: number
 }) {
+  const chartClassName = "w-full aspect-[4/3] sm:aspect-video"
+
   const series = React.useMemo(() => {
     const points = data
       .slice()
@@ -63,7 +65,7 @@ export function TradeImportsChart({
 
   if (!series.length) {
     return (
-      <ChartContainer config={chartConfig}>
+      <ChartContainer config={chartConfig} className={chartClassName}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
           No trade import data available.
         </div>
@@ -72,7 +74,7 @@ export function TradeImportsChart({
   }
 
   return (
-    <ChartContainer config={chartConfig}>
+    <ChartContainer config={chartConfig} className={chartClassName}>
       <LineChart data={series}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis

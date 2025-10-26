@@ -63,6 +63,8 @@ export function ElectricityBalanceChart({
   data: ElectricityRecord[]
   months?: number
 }) {
+  const chartClassName = "w-full aspect-[4/3] sm:aspect-video"
+
   const series = React.useMemo(() => {
     return data
       .slice()
@@ -80,7 +82,7 @@ export function ElectricityBalanceChart({
 
   if (!series.length) {
     return (
-      <ChartContainer config={chartConfig}>
+      <ChartContainer config={chartConfig} className={chartClassName}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
           No electricity data available.
         </div>
@@ -102,7 +104,7 @@ export function ElectricityBalanceChart({
         Latest import share:{" "}
         <span className="font-medium text-foreground">{importShare}%</span>
       </div>
-      <ChartContainer config={chartConfig}>
+      <ChartContainer config={chartConfig} className={chartClassName}>
         <LineChart data={series}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis

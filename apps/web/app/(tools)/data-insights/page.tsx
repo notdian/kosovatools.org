@@ -77,6 +77,8 @@ export default function DataInsightsPage() {
     })
     : "n/a"
 
+  const chartContentClass = "px-2 sm:px-6"
+
   return (
     <article className="space-y-10">
       <header className="space-y-2">
@@ -106,7 +108,7 @@ export default function DataInsightsPage() {
               CIF values in thousand euro. Latest period: {latestTradeLabel}.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className={chartContentClass}>
             <TradeImportsChart data={tradeImportsMonthly} months={24} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
@@ -121,7 +123,7 @@ export default function DataInsightsPage() {
               Top trading partners over the last year. Adjust the selection or toggle the “Other” bucket to inspect smaller partners.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className={chartContentClass}>
             <ImportPartnersStackedChart data={tradeImportsByPartner} months={12} top={6} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
@@ -140,7 +142,7 @@ export default function DataInsightsPage() {
               Monthly electricity imports and domestic generation (GWh).
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className={chartContentClass}>
             <ElectricityBalanceChart data={electricityMonthly} months={24} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
@@ -159,7 +161,7 @@ export default function DataInsightsPage() {
               Leading origin countries stacked by visitors or overnight stays across the last year.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className={chartContentClass}>
             <TourismCountryStackedChart data={tourismByCountry} months={12} top={5} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
@@ -174,7 +176,7 @@ export default function DataInsightsPage() {
               Small multiples for Kosovo regions with visitor-group filters.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className={chartContentClass}>
             <TourismRegionCharts data={tourismByRegion} months={12} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
