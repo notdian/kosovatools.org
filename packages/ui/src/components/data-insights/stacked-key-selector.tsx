@@ -3,6 +3,8 @@
 import * as React from "react"
 
 import { Button } from "../button.tsx"
+import { Checkbox } from "../checkbox.tsx"
+import { Label } from "../label.tsx"
 
 export type StackedKeyTotal = {
   key: string
@@ -43,6 +45,7 @@ export function StackedKeySelector({
 }: StackedKeySelectorProps) {
   const [searchTerm, setSearchTerm] = React.useState("")
   const [otherSearchTerm, setOtherSearchTerm] = React.useState("")
+  const includeOtherId = React.useId()
 
   const normalizedSearch = searchTerm.trim().toLowerCase()
   const normalizedOtherSearch = otherSearchTerm.trim().toLowerCase()
@@ -206,14 +209,20 @@ export function StackedKeySelector({
           }
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <input
-                type="checkbox"
-                className="h-3.5 w-3.5 accent-primary mr-1"
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id={includeOtherId}
                 checked={includeOther}
-                onChange={(event) => onIncludeOtherChange(event.target.checked)}
+                onCheckedChange={(checked) =>
+                  onIncludeOtherChange(checked === true)
+                }
               />
-              <span className="font-medium text-muted-foreground">{promoteLabel}</span>
+              <Label
+                htmlFor={includeOtherId}
+                className="cursor-pointer font-medium text-muted-foreground"
+              >
+                {promoteLabel}
+              </Label>
             </div>
             <div
               className={
