@@ -87,7 +87,7 @@ function formatPartnerName(partner: string): string {
 
   const transformed = label
     .toLowerCase()
-    .replace(/(^|[\s\-\/,&])(\p{L})/gu, (
+    .replace(/(^|[\s,/&-])(\p{L})/gu, (
       _match: string,
       prefix: string,
       char: string

@@ -218,8 +218,8 @@ export function TourismRegionCharts({
                 labelFormatter={(label: string) => label}
                 formatter={(value, name) =>
                   value != null
-                    ? `${formatCount(value as number)} visitors`
-                    : "Not reported"
+                    ? { value: `${formatCount(value as number)} visitors`, name }
+                    : { value: "Not reported", name }
                 }
               />
             }

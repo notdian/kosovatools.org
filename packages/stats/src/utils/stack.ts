@@ -153,7 +153,6 @@ export function buildStackSeries<TRecord, TKey extends string>(
     }
   }
   const periodSet = new Set(periods)
-  const totalsByKey = buildTotalsMap(records, accessors, periodSet)
 
   const baseTotals = summarizeStackTotals(records, accessors, options)
   const excludedSet = new Set(options.excludedKeys ?? [])

@@ -28,14 +28,14 @@ export default function CustomsCodesPage() {
         <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] items-start">
           <Card className="rounded-2xl border border-border/70 bg-card/70 px-6">
             <CardHeader className="px-0">
-              <div className="flex justify-between items-start">
-                <p className="text-md font-bold uppercase tracking-wide">
+              <CardTitle className="flex justify-between items-start text-base">
+                <span className="font-semibold uppercase tracking-wide">
                   Përditësuar / Last updated
-                </p>
-                <time title={buildTime} dateTime={buildTime}>
+                </span>
+                <time title={buildTime} dateTime={buildTime} className="font-normal">
                   {buildTime}
                 </time>
-              </div>
+              </CardTitle>
               <CardDescription className="text-xs">
                 Të dhënat rifreskohen periodikisht nga burimet publike të Doganës
                 së Kosovës.
