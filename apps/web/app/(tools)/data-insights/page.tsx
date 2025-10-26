@@ -33,10 +33,6 @@ export default function DataInsightsPage() {
     table?: string
     unit?: string
   }) ?? {}
-  const fuelSource = (kasSources.sources["fuel_monthly"] as Record<
-    string,
-    { metrics?: Array<{ field: string; label: string }>; table?: string }
-  >) ?? {}
   const tourismSource = (kasSources.sources["tourism_monthly"] as {
     region?: { table?: string }
     country?: { table?: string }

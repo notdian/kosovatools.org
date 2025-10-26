@@ -50,7 +50,10 @@ export function StackedKeySelector({
   const normalizedSearch = searchTerm.trim().toLowerCase()
   const normalizedOtherSearch = otherSearchTerm.trim().toLowerCase()
   const otherDisabled = !includeOther
-  const excludedKeys = controlledExcludedKeys ?? []
+  const excludedKeys = React.useMemo(
+    () => controlledExcludedKeys ?? [],
+    [controlledExcludedKeys]
+  )
   const excludedSearchLabel = excludedSearchPlaceholder ?? searchPlaceholder
 
   const totalsWithValues = React.useMemo(
@@ -160,6 +163,14 @@ export function StackedKeySelector({
               className="h-7 px-2 text-xs"
             >
               Top {topCount}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSelectAll}
+              className="h-7 px-2 text-xs"
+            >
+              All
             </Button>
           </div>
           <input
