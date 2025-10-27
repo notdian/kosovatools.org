@@ -2,9 +2,9 @@
 
 import * as React from "react"
 
-import { Button } from "../button.tsx"
-import { Checkbox } from "../checkbox.tsx"
-import { Label } from "../label.tsx"
+import { Button } from "@workspace/ui/components/button"
+import { Checkbox } from "@workspace/ui/components/checkbox"
+import { Label } from "@workspace/ui/components/label"
 
 export type StackedKeyTotal = {
   key: string

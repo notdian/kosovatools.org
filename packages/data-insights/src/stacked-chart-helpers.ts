@@ -1,8 +1,8 @@
-import type { ChartConfig } from "../chart.tsx"
+import type { ChartConfig } from "@workspace/ui/components/chart"
 import {
   createChromaPalette,
   type PaletteColor,
-} from "../../lib/chart-palette.ts"
+} from "@workspace/ui/lib/chart-palette"
 
 export type StackedSeriesRow = {
   period: string

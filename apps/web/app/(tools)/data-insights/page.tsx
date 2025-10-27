@@ -17,11 +17,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card"
-import { ElectricityBalanceChart } from "@workspace/ui/components/data-insights/electricity-balance-chart"
-import { ImportPartnersStackedChart } from "@workspace/ui/components/data-insights/import-partners-stacked-chart"
-import { TourismCountryStackedChart } from "@workspace/ui/components/data-insights/tourism-country-stacked-chart"
-import { TourismRegionCharts } from "@workspace/ui/components/data-insights/tourism-region-chart"
-import { TradeImportsChart } from "@workspace/ui/components/data-insights/trade-imports-chart"
+import {
+  ElectricityBalanceChart,
+  ImportPartnersStackedChart,
+  TourismCountryStackedChart,
+  TourismRegionCharts,
+  TradeImportsChart,
+} from "@workspace/data-insights"
 
 
 export default function DataInsightsPage() {

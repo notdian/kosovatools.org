@@ -21,8 +21,8 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "../chart.tsx"
-import { createChromaPalette } from "../../lib/chart-palette.ts"
+} from "@workspace/ui/components/chart"
+import { createChromaPalette } from "@workspace/ui/lib/chart-palette"
 
 const electricityPalette = createChromaPalette(2)
 const fallbackPrimary = { light: "#6d4dd3", dark: "#9a78ff" }

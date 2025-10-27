@@ -20,11 +20,11 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "../chart.tsx"
+} from "@workspace/ui/components/chart"
 import {
   createChromaPalette,
   type PaletteColor,
-} from "../../lib/chart-palette.ts"
+} from "@workspace/ui/lib/chart-palette"
 
 const groups = [
   { id: "total", label: "Total" },
