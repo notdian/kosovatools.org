@@ -151,9 +151,10 @@ export function calculateWageBreakdown(
     }
   }
 
-  const netPay = Math.max(grossPay - employeePension - incomeTax, 0);
+  const sanitizedIncomeTax = Math.max(incomeTax, 0);
+  const netPay = Math.max(grossPay - employeePension - sanitizedIncomeTax, 0);
   const employerTotalCost = grossPay + employerPension;
-  const effectiveTaxRate = grossPay > 0 ? incomeTax / grossPay : 0;
+  const effectiveTaxRate = grossPay > 0 ? sanitizedIncomeTax / grossPay : 0;
 
   return {
     grossPay,
@@ -161,7 +162,7 @@ export function calculateWageBreakdown(
     employerPension,
     taxableIncomeBeforeAllowance,
     taxableIncomeAfterAllowance,
-    incomeTax,
+    incomeTax: sanitizedIncomeTax,
     incomeTaxBreakdown,
     netPay,
     employerTotalCost,

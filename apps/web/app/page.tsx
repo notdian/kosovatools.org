@@ -23,7 +23,7 @@ export default function Page() {
             <Link href="/data-insights">See data insights</Link>
           </Button>
           <Button asChild size="lg" variant="ghost">
-            <Link href="#">Plan your salary</Link>
+            <Link href="/wage-calculator">Plan your salary</Link>
           </Button>
         </div>
       </div>

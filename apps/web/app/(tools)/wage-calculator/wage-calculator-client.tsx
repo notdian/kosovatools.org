@@ -13,6 +13,7 @@ import {
   WageCalculatorInputs,
   type WageCalculatorInputsProps,
   WageCalculatorResults,
+  type CalculationMode,
 } from "@workspace/ui/components/payroll";
 
 import {
@@ -50,6 +51,8 @@ const DEFAULT_VALUES: Pick<
   jobType: "primary",
 };
 
+const DEFAULT_MODE: CalculationMode = "grossToNet";
+
 function formatCurrency(value: number) {
   return currencyFormatter.format(value);
 }
@@ -59,6 +62,7 @@ function formatPercentage(value: number) {
 }
 
 export function WageCalculatorClient() {
+  const [mode, setMode] = useState<CalculationMode>(DEFAULT_MODE);
   const [grossPay, setGrossPay] = useState(DEFAULT_VALUES.grossPay);
   const [targetNetPay, setTargetNetPay] = useState(DEFAULT_VALUES.targetNetPay);
   const [minimumWage, setMinimumWage] = useState(DEFAULT_VALUES.minimumWage);
@@ -70,7 +74,7 @@ export function WageCalculatorClient() {
   );
   const [jobType, setJobType] = useState<JobType>(DEFAULT_VALUES.jobType);
 
-  const breakdown = useMemo(
+  const grossBreakdown = useMemo(
     () =>
       calculateWageBreakdown({
         grossPay,
@@ -94,6 +98,9 @@ export function WageCalculatorClient() {
     [targetNetPay, minimumWage, employeePensionRate, employerPensionRate, jobType],
   );
 
+  const activeResult =
+    mode === "grossToNet" ? grossBreakdown : inverseBreakdown.breakdown;
+
   return (
     <article className="space-y-8">
       <header className="space-y-2">
@@ -111,18 +118,21 @@ export function WageCalculatorClient() {
           <CardHeader>
             <CardTitle>Shënoni të dhënat e pagës</CardTitle>
             <CardDescription>
-              Filloni me pagën bruto, pastaj përshtatni kontributet në pension
-              ose pagën minimale të përjashtuar nga tatimi sipas nevojës.
+              Zgjidhni nëse po nisni nga paga bruto apo nga paga neto dhe më
+              pas përshtatni kontributet në pension ose pagën minimale të
+              përjashtuar nga tatimi sipas nevojës.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <WageCalculatorInputs
+              mode={mode}
               grossPay={grossPay}
               targetNetPay={targetNetPay}
               minimumWage={minimumWage}
               employeePensionRate={employeePensionRate}
               employerPensionRate={employerPensionRate}
               jobType={jobType}
+              onModeChange={setMode}
               onGrossPayChange={setGrossPay}
               onTargetNetPayChange={setTargetNetPay}
               onMinimumWageChange={setMinimumWage}
@@ -134,8 +144,8 @@ export function WageCalculatorClient() {
         </Card>
 
         <WageCalculatorResults
-          result={breakdown}
-          inverseResult={inverseBreakdown}
+          result={activeResult}
+          inverseResult={mode === "netToGross" ? inverseBreakdown : undefined}
           formatCurrency={formatCurrency}
           formatPercentage={formatPercentage}
         />
