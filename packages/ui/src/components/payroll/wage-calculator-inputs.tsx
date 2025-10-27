@@ -12,14 +12,12 @@ export interface WageCalculatorInputsProps {
   mode: CalculationMode;
   grossPay: number;
   targetNetPay: number;
-  minimumWage: number;
   employerPensionRate: number;
   employeePensionRate: number;
   jobType: JobType;
   onModeChange: (value: CalculationMode) => void;
   onGrossPayChange: (value: number) => void;
   onTargetNetPayChange: (value: number) => void;
-  onMinimumWageChange: (value: number) => void;
   onEmployeePensionRateChange: (value: number) => void;
   onEmployerPensionRateChange: (value: number) => void;
   onJobTypeChange: (value: JobType) => void;
@@ -29,14 +27,12 @@ function WageCalculatorInputs({
   mode,
   grossPay,
   targetNetPay,
-  minimumWage,
   employeePensionRate,
   employerPensionRate,
   jobType,
   onModeChange,
   onGrossPayChange,
   onTargetNetPayChange,
-  onMinimumWageChange,
   onEmployeePensionRateChange,
   onEmployerPensionRateChange,
   onJobTypeChange,
@@ -66,7 +62,8 @@ function WageCalculatorInputs({
             {
               value: "netToGross" as CalculationMode,
               label: "Nga neto në bruto",
-              description: "Futni pagën neto të synuar për të gjetur pagën bruto.",
+              description:
+                "Futni pagën neto të synuar për të gjetur pagën bruto.",
             },
           ].map((option) => {
             const isActive = mode === option.value;
@@ -126,20 +123,6 @@ function WageCalculatorInputs({
           </p>
         </div>
       )}
-      <div className="grid gap-2">
-        <Label htmlFor="minimum-wage">Pagë minimale e përjashtuar nga tatimi (€)</Label>
-        <Input
-          id="minimum-wage"
-          inputMode="decimal"
-          min={0}
-          step="0.01"
-          value={Number.isFinite(minimumWage) ? minimumWage : 0}
-          onChange={handleNumberChange(onMinimumWageChange)}
-        />
-        <p className="text-xs text-muted-foreground">
-          Ndryshojeni kur Qeveria e Kosovës përditëson pagën minimale ligjore.
-        </p>
-      </div>
       <div className="grid gap-2 sm:grid-cols-2">
         <div className="grid gap-2">
           <Label htmlFor="employee-pension">Kontributi i punonjësit (%)</Label>
@@ -156,7 +139,9 @@ function WageCalculatorInputs({
           />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="employer-pension">Kontributi i punëdhënësit (%)</Label>
+          <Label htmlFor="employer-pension">
+            Kontributi i punëdhënësit (%)
+          </Label>
           <Input
             id="employer-pension"
             inputMode="decimal"
@@ -188,7 +173,8 @@ function WageCalculatorInputs({
           <option value="secondary">Jo, është punë shtesë</option>
         </select>
         <p className="text-xs text-muted-foreground">
-          Punësimet sekondare tatohen me 10% pa përjashtimin e pagës minimale.
+          Punësimet sekondare tatohen me normë fikse 10% pa shkallët progresive
+          të punësimit kryesor.
         </p>
       </div>
     </div>

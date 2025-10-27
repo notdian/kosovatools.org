@@ -13,7 +13,10 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "../chart";
-import { createChromaPalette, type PaletteColor } from "../../lib/chart-palette";
+import {
+  createChromaPalette,
+  type PaletteColor,
+} from "../../lib/chart-palette";
 import { cn } from "@workspace/ui/lib/utils";
 
 type TaxBreakdownEntry = {
@@ -27,8 +30,7 @@ type WageCalculatorResultsData = {
   grossPay: number;
   employeePension: number;
   employerPension: number;
-  taxableIncomeBeforeAllowance: number;
-  taxableIncomeAfterAllowance: number;
+  taxableIncome: number;
   incomeTax: number;
   incomeTaxBreakdown: TaxBreakdownEntry[];
   netPay: number;
@@ -278,11 +280,7 @@ function WageCalculatorResults({
         color: "var(--color-employeePension)",
       },
     ].filter((link) => link.value > 0);
-  }, [
-    sanitizedEmployeePension,
-    sanitizedIncomeTax,
-    sanitizedNetPay,
-  ]);
+  }, [sanitizedEmployeePension, sanitizedIncomeTax, sanitizedNetPay]);
 
   const hasFlow = sankeyLinks.length > 0;
 
@@ -293,7 +291,9 @@ function WageCalculatorResults({
       </CardHeader>
       <CardContent className="grid gap-6">
         <div>
-          <p className="text-sm text-muted-foreground">Pagë neto e llogaritur</p>
+          <p className="text-sm text-muted-foreground">
+            Pagë neto e llogaritur
+          </p>
           <p className="text-3xl font-semibold">
             {formatCurrency(result.netPay)}
           </p>
@@ -326,7 +326,9 @@ function WageCalculatorResults({
         </div>
         <div className="space-y-2">
           <div>
-            <p className="text-sm font-medium">Vizualizimi i rrjedhës së pagës</p>
+            <p className="text-sm font-medium">
+              Vizualizimi i rrjedhës së pagës
+            </p>
             <p className="text-xs text-muted-foreground">
               Shihni se si shpërndahet kostoja totale midis Trustit, tatimit dhe
               pagës neto.
@@ -344,7 +346,11 @@ function WageCalculatorResults({
                 iterations={32}
                 margin={{ top: 12, bottom: 12, left: 8, right: 8 }}
                 linkCurvature={0.45}
-                link={{ strokeOpacity: 0.5, strokeWidth: 24, cursor: "default" }}
+                link={{
+                  strokeOpacity: 0.5,
+                  strokeWidth: 24,
+                  cursor: "default",
+                }}
                 node={(nodeProps) => (
                   <SankeyNodeWithLabel
                     {...nodeProps}
@@ -376,7 +382,10 @@ function WageCalculatorResults({
                             ? `${sourceName} → ${targetName}`
                             : payload?.name || "Rrjedha";
 
-                        return [formatCurrency(Math.max(numericValue, 0)), label];
+                        return [
+                          formatCurrency(Math.max(numericValue, 0)),
+                          label,
+                        ];
                       }}
                     />
                   }
@@ -393,8 +402,8 @@ function WageCalculatorResults({
           <div>
             <p className="text-sm font-medium">Të ardhurat e tatueshme</p>
             <p className="text-sm text-muted-foreground">
-              Para përjashtimit: {formatCurrency(result.taxableIncomeBeforeAllowance)} ·
-              Pas përjashtimit: {formatCurrency(result.taxableIncomeAfterAllowance)}
+              Pas kontributit të punonjësit në Trust:{" "}
+              {formatCurrency(result.taxableIncome)}
             </p>
           </div>
           {hasTax ? (
@@ -409,9 +418,7 @@ function WageCalculatorResults({
                       Shuma e tatueshme
                     </th>
                     <th className="px-3 py-2 text-right font-medium">Norma</th>
-                    <th className="px-3 py-2 text-right font-medium">
-                      Tatimi
-                    </th>
+                    <th className="px-3 py-2 text-right font-medium">Tatimi</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -452,17 +459,15 @@ function WageCalculatorResults({
                 Neto në bruto
               </p>
               <p className="text-sm text-muted-foreground">
-                Për të marrë {formatCurrency(inverseResult.targetNetPay)} neto, ju
-                duhet një pagë bruto rreth {" "}
+                Për të marrë {formatCurrency(inverseResult.targetNetPay)} neto,
+                ju duhet një pagë bruto rreth{" "}
                 {formatCurrency(inverseResult.estimatedGrossPay)}.
               </p>
             </div>
             <div className="grid gap-2 sm:grid-cols-2">
               <SummaryItem
                 label="Tatimi i pritur"
-                value={formatCurrency(
-                  clamp(inverseResult.breakdown.incomeTax),
-                )}
+                value={formatCurrency(clamp(inverseResult.breakdown.incomeTax))}
               />
               <SummaryItem
                 label="Pensioni i punonjësit"
@@ -472,8 +477,8 @@ function WageCalculatorResults({
               />
             </div>
             <p className="text-xs text-muted-foreground">
-              Diferenca ndaj netos së synuar: {formatCurrency(Math.abs(inverseResult.differenceFromTarget))}
-              {" "}
+              Diferenca ndaj netos së synuar:{" "}
+              {formatCurrency(Math.abs(inverseResult.differenceFromTarget))}{" "}
               {inverseResult.differenceFromTarget >= 0 ? "më shumë" : "më pak"}.
             </p>
           </div>
