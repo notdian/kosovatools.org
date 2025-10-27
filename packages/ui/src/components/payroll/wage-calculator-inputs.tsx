@@ -20,6 +20,7 @@ export interface WageCalculatorInputsProps {
   onGrossPayChange: (value: number) => void;
   onTargetNetPayChange: (value: number) => void;
   onMinimumWageChange: (value: number) => void;
+  onEmployeePensionRateChange: (value: number) => void;
   onEmployerPensionRateChange: (value: number) => void;
   onJobTypeChange: (value: JobType) => void;
 }
