@@ -199,46 +199,32 @@ function WageCalculatorResults({
 
   const chartConfig = React.useMemo<ChartConfig>(() => {
     return {
-      total: {
-        label: "Kosto totale për punëdhënësin",
+      gross: {
+        label: "Pagë bruto",
         theme: {
           light: resolveColor(0).light,
           dark: resolveColor(0).dark,
         },
       },
-      gross: {
-        label: "Pagë bruto",
+      employeePension: {
+        label: "Kontributi i punonjësit",
         theme: {
           light: resolveColor(1).light,
           dark: resolveColor(1).dark,
         },
       },
-      employerPension: {
-        label: "Kontributi i punëdhënësit",
+      incomeTax: {
+        label: "Tatimi në të ardhura",
         theme: {
           light: resolveColor(2).light,
           dark: resolveColor(2).dark,
         },
       },
-      employeePension: {
-        label: "Kontributi i punonjësit",
-        theme: {
-          light: resolveColor(3).light,
-          dark: resolveColor(3).dark,
-        },
-      },
-      incomeTax: {
-        label: "Tatimi në të ardhura",
-        theme: {
-          light: resolveColor(4).light,
-          dark: resolveColor(4).dark,
-        },
-      },
       net: {
         label: "Pagë neto",
         theme: {
-          light: resolveColor(5).light,
-          dark: resolveColor(5).dark,
+          light: resolveColor(3).light,
+          dark: resolveColor(3).dark,
         },
       },
     } satisfies ChartConfig;
@@ -260,12 +246,10 @@ function WageCalculatorResults({
 
   const sankeyNodes = React.useMemo(() => {
     return [
-      { name: "Kosto totale për punëdhënësin", key: "total" as const },
       { name: "Pagë bruto", key: "gross" as const },
-      { name: "Kontributi i punëdhënësit", key: "employerPension" as const },
-      { name: "Kontributi i punonjësit", key: "employeePension" as const },
-      { name: "Tatimi në të ardhura", key: "incomeTax" as const },
       { name: "Pagë neto", key: "net" as const },
+      { name: "Tatimi në të ardhura", key: "incomeTax" as const },
+      { name: "Kontributi i punonjësit", key: "employeePension" as const },
     ].map((node) => ({
       name: node.name,
       fill: `var(--color-${node.key})`,
@@ -278,37 +262,23 @@ function WageCalculatorResults({
       {
         source: 0,
         target: 1,
-        value: sanitizedGross,
-        color: "var(--color-gross)",
+        value: sanitizedNetPay,
+        color: "var(--color-net)",
       },
       {
         source: 0,
         target: 2,
-        value: sanitizedEmployerPension,
-        color: "var(--color-employerPension)",
-      },
-      {
-        source: 1,
-        target: 3,
-        value: sanitizedEmployeePension,
-        color: "var(--color-employeePension)",
-      },
-      {
-        source: 1,
-        target: 4,
         value: sanitizedIncomeTax,
         color: "var(--color-incomeTax)",
       },
       {
-        source: 1,
-        target: 5,
-        value: sanitizedNetPay,
-        color: "var(--color-net)",
+        source: 0,
+        target: 3,
+        value: sanitizedEmployeePension,
+        color: "var(--color-employeePension)",
       },
     ].filter((link) => link.value > 0);
   }, [
-    sanitizedGross,
-    sanitizedEmployerPension,
     sanitizedEmployeePension,
     sanitizedIncomeTax,
     sanitizedNetPay,
