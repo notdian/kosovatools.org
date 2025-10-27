@@ -73,6 +73,14 @@ type SankeyNodeDatum = {
   [key: string]: unknown;
 };
 
+type SankeyLinkDatum = {
+  source?: SankeyNodeDatum;
+  target?: SankeyNodeDatum;
+  value?: number;
+  color?: string;
+  [key: string]: unknown;
+};
+
 type SankeyNodeWithLabelProps = {
   x: number;
   y: number;
@@ -90,75 +98,172 @@ function SankeyNodeWithLabel({
   height,
   payload,
   formatCurrency,
-  index: _index,
-  ...rest
 }: SankeyNodeWithLabelProps) {
   const fill = typeof payload.fill === "string" ? payload.fill : "var(--muted)";
-  const stroke =
-    typeof payload.stroke === "string"
-      ? payload.stroke
-      : typeof payload.fill === "string"
-        ? payload.fill
-        : "var(--muted)";
   const amountValue =
     typeof payload.value === "number" && Number.isFinite(payload.value)
       ? Math.max(payload.value, 0)
       : undefined;
-  const depth = typeof payload.depth === "number" ? payload.depth : 0;
-  const labelOffset = 12;
-  const hasInnerSpace = width >= 96;
-  const isLeftAligned = depth <= 1;
-  const baseX = hasInnerSpace
-    ? x + width / 2
-    : isLeftAligned
-      ? x - labelOffset
-      : x + width + labelOffset;
-  const textAnchor = hasInnerSpace ? "middle" : isLeftAligned ? "end" : "start";
-  const centerY = y + height / 2;
-  const amountX = hasInnerSpace ? baseX : x + width / 2;
-  const amountAnchor = hasInnerSpace ? textAnchor : "middle";
-  const amountY = hasInnerSpace ? centerY + 14 : y + height + 12;
+  const adjustedWidth = Math.max(width - 8, 0);
+  const adjustedX = x + 4;
+  const adjustedY = y - 2;
+  const adjustedHeight = height + 4;
 
   return (
     <g>
       <rect
+        x={adjustedX}
+        y={adjustedY}
+        width={adjustedWidth}
+        height={adjustedHeight}
+        fill={fill}
+        rx={3}
+        ry={3}
+        style={{ cursor: "default" }}
+      />
+      <foreignObject
         x={x}
         y={y}
         width={width}
         height={height}
-        fill={fill}
-        fillOpacity={0.9}
-        stroke={stroke}
-        strokeWidth={1}
-        rx={4}
-        ry={4}
-        style={{ cursor: "default" }}
-        {...(rest as React.SVGProps<SVGRectElement>)}
+        style={{ pointerEvents: "none" }}
+      >
+        <div
+          xmlns="http://www.w3.org/1999/xhtml"
+          style={{
+            boxSizing: "border-box",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            justifyContent: "center",
+            width: "100%",
+            height: "100%",
+            padding: "0.5rem",
+            gap: 6,
+          }}
+        >
+          {payload.name ? (
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                color: "var(--foreground)",
+              }}
+            >
+              {payload.name}
+            </span>
+          ) : null}
+          {amountValue !== undefined ? (
+            <span
+              style={{
+                fontSize: 11,
+                color: "var(--muted-foreground)",
+              }}
+            >
+              {formatCurrency(amountValue)}
+            </span>
+          ) : null}
+        </div>
+      </foreignObject>
+    </g>
+  );
+}
+
+type SankeyLinkWithLabelProps = {
+  sourceX: number;
+  targetX: number;
+  sourceY: number;
+  targetY: number;
+  sourceControlX: number;
+  targetControlX: number;
+  sourceRelativeY: number;
+  targetRelativeY: number;
+  linkWidth: number;
+  index: number;
+  payload: SankeyLinkDatum;
+  formatCurrency: (value: number) => string;
+};
+
+function SankeyLinkWithLabel({
+  sourceX,
+  targetX,
+  sourceY,
+  targetY,
+  sourceControlX,
+  targetControlX,
+  linkWidth,
+  payload,
+  formatCurrency,
+}: SankeyLinkWithLabelProps) {
+  const strokeColor =
+    (typeof payload.color === "string" && payload.color) ||
+    (typeof payload.source?.stroke === "string" && payload.source.stroke) ||
+    (typeof payload.source?.fill === "string" && payload.source.fill) ||
+    (typeof payload.target?.stroke === "string" && payload.target.stroke) ||
+    "var(--muted-foreground)";
+  const amountValue =
+    typeof payload.value === "number" && Number.isFinite(payload.value)
+      ? Math.max(payload.value, 0)
+      : undefined;
+  const label = payload.target?.name || payload.source?.name || "";
+  const isForward = targetX >= sourceX;
+  const foreignObjectWidth = Math.max(Math.abs(targetX - sourceX), linkWidth);
+  const foreignObjectX = Math.min(sourceX, targetX);
+  const foreignObjectY = targetY - linkWidth / 2;
+
+  return (
+    <g>
+      <path
+        d={`
+  M${sourceX},${sourceY}
+  C${sourceControlX},${sourceY} ${targetControlX},${targetY} ${targetX},${targetY}`}
+        fill="none"
+        stroke={strokeColor}
+        strokeOpacity={0.4}
+        strokeWidth={linkWidth}
+        strokeLinecap="butt"
       />
-      {payload.name ? (
-        <text
-          x={baseX}
-          y={centerY}
-          textAnchor={textAnchor}
-          dominantBaseline="middle"
-          fontSize={12}
-          fontWeight={600}
-          fill="var(--foreground)"
-        >
-          {payload.name}
-        </text>
-      ) : null}
       {amountValue !== undefined ? (
-        <text
-          x={amountX}
-          y={amountY}
-          textAnchor={amountAnchor}
-          dominantBaseline="middle"
-          fontSize={11}
-          fill="var(--muted-foreground)"
+        <foreignObject
+          x={foreignObjectX}
+          y={foreignObjectY}
+          width={foreignObjectWidth}
+          height={linkWidth}
+          style={{ overflow: "visible", pointerEvents: "none" }}
         >
-          {formatCurrency(amountValue)}
-        </text>
+          <div
+            xmlns="http://www.w3.org/1999/xhtml"
+            style={{
+              boxSizing: "border-box",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: isForward ? "flex-end" : "flex-start",
+              width: "100%",
+              height: "100%",
+              overflow: "visible",
+              padding: "0.25rem 0.5rem",
+            }}
+          >
+            <span
+              style={{
+                fontSize: 10,
+                fontFamily: "inherit",
+                textAlign: "center",
+                backgroundColor: "hsla(var(--muted), 0.3)",
+                color: "var(--foreground)",
+                padding: "0.25em 0.5em",
+                borderRadius: 4,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 4,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {label ? `${label}: ` : ""}
+              {formatCurrency(amountValue)}
+            </span>
+          </div>
+        </foreignObject>
       ) : null}
     </g>
   );
@@ -346,11 +451,12 @@ function WageCalculatorResults({
                 iterations={32}
                 margin={{ top: 12, bottom: 12, left: 8, right: 8 }}
                 linkCurvature={0.45}
-                link={{
-                  strokeOpacity: 0.5,
-                  strokeWidth: 24,
-                  cursor: "default",
-                }}
+                link={(linkProps) => (
+                  <SankeyLinkWithLabel
+                    {...linkProps}
+                    formatCurrency={formatCurrency}
+                  />
+                )}
                 node={(nodeProps) => (
                   <SankeyNodeWithLabel
                     {...nodeProps}
