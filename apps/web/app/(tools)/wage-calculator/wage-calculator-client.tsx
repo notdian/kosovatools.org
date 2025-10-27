@@ -14,13 +14,13 @@ import {
   type WageCalculatorInputsProps,
   WageCalculatorResults,
   type CalculationMode,
-} from "@workspace/ui/components/payroll";
+} from "@workspace/payroll-ui";
 
 import {
   calculateGrossFromNet,
   calculateWageBreakdown,
   type JobType,
-} from "@/lib/payroll/wage-calculator";
+} from "@workspace/payroll";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",

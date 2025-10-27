@@ -1,10 +1,9 @@
 import * as React from "react";
 
+import type { JobType } from "@workspace/payroll";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { cn } from "@workspace/ui/lib/utils";
-
-type JobType = "primary" | "secondary";
 
 export type CalculationMode = "grossToNet" | "netToGross";
 

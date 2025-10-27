@@ -4,7 +4,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@workspace/ui/*": ["../../packages/ui/src/*"]
+      "@workspace/ui/*": ["../../packages/ui/src/*"],
+      "@workspace/payroll": ["../../packages/payroll/src/index.ts"],
+      "@workspace/payroll/*": ["../../packages/payroll/src/*.ts"],
+      "@workspace/payroll-ui": ["../../packages/payroll-ui/src/index.ts"],
+      "@workspace/payroll-ui/*": ["../../packages/payroll-ui/src/*.tsx"]
     },
     "plugins": [
       {

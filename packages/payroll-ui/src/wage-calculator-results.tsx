@@ -1,53 +1,22 @@
 import * as React from "react";
-import { Sankey } from "recharts";
-
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
+import type { NetToGrossResult, WageCalculatorResult } from "@workspace/payroll";
+import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from "../chart";
+} from "@workspace/ui/components/chart";
 import {
   createChromaPalette,
   type PaletteColor,
-} from "../../lib/chart-palette";
+} from "@workspace/ui/lib/chart-palette";
 import { cn } from "@workspace/ui/lib/utils";
-
-type TaxBreakdownEntry = {
-  label: string;
-  appliedAmount: number;
-  rate: number;
-  taxAmount: number;
-};
-
-type WageCalculatorResultsData = {
-  grossPay: number;
-  employeePension: number;
-  employerPension: number;
-  taxableIncome: number;
-  incomeTax: number;
-  incomeTaxBreakdown: TaxBreakdownEntry[];
-  netPay: number;
-  employerTotalCost: number;
-  effectiveTaxRate: number;
-};
-
-type NetToGrossResultsData = {
-  targetNetPay: number;
-  estimatedGrossPay: number;
-  differenceFromTarget: number;
-  breakdown: WageCalculatorResultsData;
-};
+import { Sankey } from "recharts";
 
 export interface WageCalculatorResultsProps {
-  result: WageCalculatorResultsData;
-  inverseResult?: NetToGrossResultsData;
+  result: WageCalculatorResult;
+  inverseResult?: NetToGrossResult;
   formatCurrency: (value: number) => string;
   formatPercentage: (value: number) => string;
   className?: string;
