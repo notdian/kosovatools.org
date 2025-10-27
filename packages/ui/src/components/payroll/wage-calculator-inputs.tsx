@@ -14,13 +14,11 @@ export interface WageCalculatorInputsProps {
   targetNetPay: number;
   minimumWage: number;
   employeePensionRate: number;
-  employerPensionRate: number;
   jobType: JobType;
   onModeChange: (value: CalculationMode) => void;
   onGrossPayChange: (value: number) => void;
   onTargetNetPayChange: (value: number) => void;
   onMinimumWageChange: (value: number) => void;
-  onEmployeePensionRateChange: (value: number) => void;
   onEmployerPensionRateChange: (value: number) => void;
   onJobTypeChange: (value: JobType) => void;
 }
