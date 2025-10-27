@@ -62,6 +62,106 @@ function SummaryItem({ label, value }: { label: string; value: string }) {
   );
 }
 
+type SankeyNodeDatum = {
+  name?: string;
+  value?: number;
+  depth?: number;
+  fill?: string;
+  stroke?: string;
+  [key: string]: unknown;
+};
+
+type SankeyNodeWithLabelProps = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  index: number;
+  payload: SankeyNodeDatum;
+  formatCurrency: (value: number) => string;
+} & Record<string, unknown>;
+
+function SankeyNodeWithLabel({
+  x,
+  y,
+  width,
+  height,
+  payload,
+  formatCurrency,
+  index: _index,
+  ...rest
+}: SankeyNodeWithLabelProps) {
+  const fill = typeof payload.fill === "string" ? payload.fill : "var(--muted)";
+  const stroke =
+    typeof payload.stroke === "string"
+      ? payload.stroke
+      : typeof payload.fill === "string"
+        ? payload.fill
+        : "var(--muted)";
+  const amountValue =
+    typeof payload.value === "number" && Number.isFinite(payload.value)
+      ? Math.max(payload.value, 0)
+      : undefined;
+  const depth = typeof payload.depth === "number" ? payload.depth : 0;
+  const labelOffset = 12;
+  const hasInnerSpace = width >= 96;
+  const isLeftAligned = depth <= 1;
+  const baseX = hasInnerSpace
+    ? x + width / 2
+    : isLeftAligned
+      ? x - labelOffset
+      : x + width + labelOffset;
+  const textAnchor = hasInnerSpace ? "middle" : isLeftAligned ? "end" : "start";
+  const centerY = y + height / 2;
+  const amountX = hasInnerSpace ? baseX : x + width / 2;
+  const amountAnchor = hasInnerSpace ? textAnchor : "middle";
+  const amountY = hasInnerSpace ? centerY + 14 : y + height + 12;
+
+  return (
+    <g>
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        fill={fill}
+        fillOpacity={0.9}
+        stroke={stroke}
+        strokeWidth={1}
+        rx={4}
+        ry={4}
+        style={{ cursor: "default" }}
+        {...(rest as React.SVGProps<SVGRectElement>)}
+      />
+      {payload.name ? (
+        <text
+          x={baseX}
+          y={centerY}
+          textAnchor={textAnchor}
+          dominantBaseline="middle"
+          fontSize={12}
+          fontWeight={600}
+          fill="var(--foreground)"
+        >
+          {payload.name}
+        </text>
+      ) : null}
+      {amountValue !== undefined ? (
+        <text
+          x={amountX}
+          y={amountY}
+          textAnchor={amountAnchor}
+          dominantBaseline="middle"
+          fontSize={11}
+          fill="var(--muted-foreground)"
+        >
+          {formatCurrency(amountValue)}
+        </text>
+      ) : null}
+    </g>
+  );
+}
+
 function WageCalculatorResults({
   result,
   inverseResult,
@@ -275,7 +375,12 @@ function WageCalculatorResults({
                 margin={{ top: 12, bottom: 12, left: 8, right: 8 }}
                 linkCurvature={0.45}
                 link={{ strokeOpacity: 0.5, strokeWidth: 24, cursor: "default" }}
-                node={{ cursor: "default" }}
+                node={(nodeProps) => (
+                  <SankeyNodeWithLabel
+                    {...nodeProps}
+                    formatCurrency={formatCurrency}
+                  />
+                )}
               >
                 <ChartTooltip
                   content={
