@@ -45,7 +45,7 @@ const DEFAULT_VALUES: Pick<
 > = {
   grossPay: 650,
   targetNetPay: 550,
-  minimumWage: 264,
+  minimumWage: 350,
   employeePensionRate: 5,
   employerPensionRate: 5,
   jobType: "primary",
