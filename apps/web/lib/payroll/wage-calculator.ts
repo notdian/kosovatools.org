@@ -2,7 +2,6 @@ export type JobType = "primary" | "secondary";
 
 export interface WageCalculatorInput {
   grossPay: number;
-  minimumWage: number;
   employeePensionRate: number;
   employerPensionRate: number;
   jobType: JobType;
@@ -10,7 +9,6 @@ export interface WageCalculatorInput {
 
 export interface NetToGrossInput {
   targetNetPay: number;
-  minimumWage: number;
   employeePensionRate: number;
   employerPensionRate: number;
   jobType: JobType;
@@ -27,8 +25,7 @@ export interface WageCalculatorResult {
   grossPay: number;
   employeePension: number;
   employerPension: number;
-  taxableIncomeBeforeAllowance: number;
-  taxableIncomeAfterAllowance: number;
+  taxableIncome: number;
   incomeTax: number;
   incomeTaxBreakdown: TaxBreakdownEntry[];
   netPay: number;
@@ -49,19 +46,19 @@ const PRIMARY_JOB_BRACKETS: Array<{
   label: string;
 }> = [
   {
-    limit: 170,
-    rate: 0.04,
-    label: "Shkalla 4% pas pagës minimale",
+    limit: 250,
+    rate: 0,
+    label: "Përjashtimi 0% deri në €250",
   },
   {
     limit: 200,
     rate: 0.08,
-    label: "Shkalla e dytë 8%",
+    label: "Shkalla 8% nga €250.01 në €450",
   },
   {
     limit: Number.POSITIVE_INFINITY,
     rate: 0.1,
-    label: "Shkalla më e lartë 10%",
+    label: "Shkalla 10% mbi €450",
   },
 ];
 
@@ -89,7 +86,6 @@ export function calculateWageBreakdown(
   input: WageCalculatorInput,
 ): WageCalculatorResult {
   const grossPay = sanitizeAmount(input.grossPay);
-  const minimumWage = sanitizeAmount(input.minimumWage);
   const employeePensionRate =
     Math.max(sanitizeRate(input.employeePensionRate), MINIMUM_PENSION_RATE) /
     100;
@@ -101,15 +97,14 @@ export function calculateWageBreakdown(
   const employeePension = Math.min(grossPay, grossPay * employeePensionRate);
   const employerPension = Math.min(grossPay, grossPay * employerPensionRate);
 
-  const taxableIncomeBeforeAllowance = Math.max(grossPay - employeePension, 0);
+  const taxableIncome = Math.max(grossPay - employeePension, 0);
 
   const incomeTaxBreakdown: TaxBreakdownEntry[] = [];
 
-  let taxableIncomeAfterAllowance = taxableIncomeBeforeAllowance;
   let incomeTax = 0;
 
   if (jobType === "secondary") {
-    const appliedAmount = taxableIncomeAfterAllowance;
+    const appliedAmount = taxableIncome;
     const taxAmount = appliedAmount * SECONDARY_JOB_RATE;
     incomeTax = taxAmount;
 
@@ -122,12 +117,7 @@ export function calculateWageBreakdown(
       });
     }
   } else {
-    taxableIncomeAfterAllowance = Math.max(
-      taxableIncomeAfterAllowance - minimumWage,
-      0,
-    );
-
-    let remaining = taxableIncomeAfterAllowance;
+    let remaining = taxableIncome;
 
     for (const bracket of PRIMARY_JOB_BRACKETS) {
       if (remaining <= 0) {
@@ -160,8 +150,7 @@ export function calculateWageBreakdown(
     grossPay,
     employeePension,
     employerPension,
-    taxableIncomeBeforeAllowance,
-    taxableIncomeAfterAllowance,
+    taxableIncome,
     incomeTax: sanitizedIncomeTax,
     incomeTaxBreakdown,
     netPay,
@@ -173,7 +162,6 @@ export function calculateWageBreakdown(
 export function calculateGrossFromNet(
   input: NetToGrossInput,
 ): NetToGrossResult {
-  const minimumWage = sanitizeAmount(input.minimumWage);
   const employeePensionRate = Math.max(
     sanitizeRate(input.employeePensionRate),
     MINIMUM_PENSION_RATE,
@@ -188,7 +176,6 @@ export function calculateGrossFromNet(
   if (targetNetPay <= 0) {
     const breakdown = calculateWageBreakdown({
       grossPay: 0,
-      minimumWage,
       employeePensionRate,
       employerPensionRate,
       jobType,
@@ -203,13 +190,12 @@ export function calculateGrossFromNet(
   }
 
   let lower = 0;
-  let upper = Math.max(targetNetPay * 1.5, minimumWage * 2, 1000);
+  let upper = Math.max(targetNetPay * 1.5, 600);
   const MAX_UPPER_BOUND = 100_000;
 
   while (upper < MAX_UPPER_BOUND) {
     const testBreakdown = calculateWageBreakdown({
       grossPay: upper,
-      minimumWage,
       employeePensionRate,
       employerPensionRate,
       jobType,
@@ -226,7 +212,6 @@ export function calculateGrossFromNet(
   let estimatedGross = upper;
   let breakdown = calculateWageBreakdown({
     grossPay: estimatedGross,
-    minimumWage,
     employeePensionRate,
     employerPensionRate,
     jobType,
@@ -246,7 +231,6 @@ export function calculateGrossFromNet(
     estimatedGross = (lower + upper) / 2;
     breakdown = calculateWageBreakdown({
       grossPay: estimatedGross,
-      minimumWage,
       employeePensionRate,
       employerPensionRate,
       jobType,

@@ -38,14 +38,12 @@ const DEFAULT_VALUES: Pick<
   WageCalculatorInputsProps,
   | "grossPay"
   | "targetNetPay"
-  | "minimumWage"
   | "employeePensionRate"
   | "employerPensionRate"
   | "jobType"
 > = {
   grossPay: 650,
   targetNetPay: 550,
-  minimumWage: 350,
   employeePensionRate: 5,
   employerPensionRate: 5,
   jobType: "primary",
@@ -65,7 +63,6 @@ export function WageCalculatorClient() {
   const [mode, setMode] = useState<CalculationMode>(DEFAULT_MODE);
   const [grossPay, setGrossPay] = useState(DEFAULT_VALUES.grossPay);
   const [targetNetPay, setTargetNetPay] = useState(DEFAULT_VALUES.targetNetPay);
-  const [minimumWage, setMinimumWage] = useState(DEFAULT_VALUES.minimumWage);
   const [employeePensionRate, setEmployeePensionRate] = useState(
     DEFAULT_VALUES.employeePensionRate,
   );
@@ -78,24 +75,22 @@ export function WageCalculatorClient() {
     () =>
       calculateWageBreakdown({
         grossPay,
-        minimumWage,
         employeePensionRate,
         employerPensionRate,
         jobType,
       }),
-    [grossPay, minimumWage, employeePensionRate, employerPensionRate, jobType],
+    [grossPay, employeePensionRate, employerPensionRate, jobType],
   );
 
   const inverseBreakdown = useMemo(
     () =>
       calculateGrossFromNet({
         targetNetPay,
-        minimumWage,
         employeePensionRate,
         employerPensionRate,
         jobType,
       }),
-    [targetNetPay, minimumWage, employeePensionRate, employerPensionRate, jobType],
+    [targetNetPay, employeePensionRate, employerPensionRate, jobType],
   );
 
   const activeResult =
@@ -118,9 +113,8 @@ export function WageCalculatorClient() {
           <CardHeader>
             <CardTitle>Shënoni të dhënat e pagës</CardTitle>
             <CardDescription>
-              Zgjidhni nëse po nisni nga paga bruto apo nga paga neto dhe më
-              pas përshtatni kontributet në pension ose pagën minimale të
-              përjashtuar nga tatimi sipas nevojës.
+              Zgjidhni nëse po nisni nga paga bruto apo nga paga neto dhe më pas
+              përshtatni kontributet në pension sipas nevojës.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -128,14 +122,12 @@ export function WageCalculatorClient() {
               mode={mode}
               grossPay={grossPay}
               targetNetPay={targetNetPay}
-              minimumWage={minimumWage}
               employeePensionRate={employeePensionRate}
               employerPensionRate={employerPensionRate}
               jobType={jobType}
               onModeChange={setMode}
               onGrossPayChange={setGrossPay}
               onTargetNetPayChange={setTargetNetPay}
-              onMinimumWageChange={setMinimumWage}
               onEmployeePensionRateChange={setEmployeePensionRate}
               onEmployerPensionRateChange={setEmployerPensionRate}
               onJobTypeChange={setJobType}
@@ -156,8 +148,8 @@ export function WageCalculatorClient() {
           <CardTitle>Si funksionon tatimi mbi pagat në Kosovë</CardTitle>
           <CardDescription>
             Rregullat më poshtë përmbledhin legjislacionin aktual. Për raste të
-            veçanta konsultohuni me punëdhënësin ose me Administratën Tatimore të
-            Kosovës.
+            veçanta konsultohuni me punëdhënësin ose me Administratën Tatimore
+            të Kosovës.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-sm leading-relaxed text-muted-foreground">
@@ -168,18 +160,17 @@ export function WageCalculatorClient() {
             të ardhurat llogaritet pasi hiqet kjo shumë nga paga bruto.
           </p>
           <p>
-            Paga minimale është plotësisht e përjashtuar nga tatimi në punësimin
-            kryesor. Në kalkulator përdorim €264 si vlerë standarde, por mund ta
-            ndryshoni nëse rritet kufiri ligjor. Mbi këtë përjashtim zbatohen
-            shkallët progresive: 4% për €170 e para, 8% për €200 pasuese dhe 10%
-            për pjesën tjetër të të ardhurave të tatueshme.
+            Tatimi progresiv mbi pagat në Kosovë zbatohet sipas kufijve mujorë:
+            0% për €0–€250, 8% për pjesën €250.01–€450 dhe 10% për çdo shumë mbi
+            €450. Kalkulatori i aplikon automatikisht këto shkallë mbi të
+            ardhurat e tatueshme pas kontributit të punonjësit në Trust.
           </p>
           <p>
-            Të ardhurat nga punësimi sekondar tatohen me normë fikse 10% pa
-            përjashtimin e pagës minimale. Kalkulatori e aplikon këtë
-            automatikisht kur e ndryshoni llojin e punësimit. Kontributet e
-            punëdhënësit shfaqen për transparencë, por nuk zbriten nga paga juaj
-            neto.
+            Të ardhurat nga punësimi sekondar tatohen me normë fikse 10% dhe nuk
+            përfitojnë nga shkallët progresive të punësimit kryesor. Kalkulatori
+            e aplikon këtë automatikisht kur e ndryshoni llojin e punësimit.
+            Kontributet e punëdhënësit shfaqen për transparencë, por nuk zbriten
+            nga paga juaj neto.
           </p>
         </CardContent>
       </Card>
