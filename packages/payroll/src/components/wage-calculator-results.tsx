@@ -130,7 +130,6 @@ function SankeyNodeWithLabel({
             backgroundColor: "hsla(var(--muted), 0.35)",
             border: "1px solid hsla(var(--muted-foreground), 0.2)",
             borderRadius: 6,
-            backdropFilter: "blur(2px)",
             boxShadow: "0 4px 12px rgba(15, 23, 42, 0.08)",
             textAlign: isSourceNode ? "left" : "right",
           }}
@@ -174,7 +173,6 @@ type SankeyLinkWithLabelProps = {
   linkWidth: number;
   index: number;
   payload: SankeyLinkDatum;
-  formatCurrency: (value: number) => string;
 };
 
 function SankeyLinkWithLabel({
@@ -186,7 +184,6 @@ function SankeyLinkWithLabel({
   targetControlX,
   linkWidth,
   payload,
-  formatCurrency,
 }: SankeyLinkWithLabelProps) {
   const strokeColor =
     (typeof payload.color === "string" && payload.color) ||
@@ -194,15 +191,6 @@ function SankeyLinkWithLabel({
     (typeof payload.source?.fill === "string" && payload.source.fill) ||
     (typeof payload.target?.stroke === "string" && payload.target.stroke) ||
     "var(--muted-foreground)";
-  const amountValue =
-    typeof payload.value === "number" && Number.isFinite(payload.value)
-      ? Math.max(payload.value, 0)
-      : undefined;
-  const label = payload.target?.name || payload.source?.name || "";
-  const isForward = targetX >= sourceX;
-  const foreignObjectWidth = Math.max(Math.abs(targetX - sourceX), linkWidth);
-  const foreignObjectX = Math.min(sourceX, targetX);
-  const foreignObjectY = targetY - linkWidth / 2;
 
   return (
     <g>
@@ -216,47 +204,6 @@ function SankeyLinkWithLabel({
         strokeWidth={linkWidth}
         strokeLinecap="butt"
       />
-      {amountValue !== undefined ? (
-        <foreignObject
-          x={foreignObjectX}
-          y={foreignObjectY}
-          width={foreignObjectWidth}
-          height={linkWidth}
-          style={{ overflow: "visible", pointerEvents: "none" }}
-        >
-          <div
-            style={{
-              boxSizing: "border-box",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: isForward ? "flex-end" : "flex-start",
-              width: "100%",
-              height: "100%",
-              overflow: "visible",
-              padding: "0.25rem 0.5rem",
-            }}
-          >
-            <span
-              style={{
-                fontSize: 10,
-                fontFamily: "inherit",
-                textAlign: "center",
-                backgroundColor: "hsla(var(--muted), 0.3)",
-                color: "var(--foreground)",
-                padding: "0.25em 0.5em",
-                borderRadius: 4,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 4,
-                whiteSpace: "nowrap",
-              }}
-            >
-              {label ? `${label}: ` : ""}
-              {formatCurrency(amountValue)}
-            </span>
-          </div>
-        </foreignObject>
-      ) : null}
     </g>
   );
 }
@@ -446,7 +393,6 @@ function WageCalculatorResults({
                 link={(linkProps) => (
                   <SankeyLinkWithLabel
                     {...linkProps}
-                    formatCurrency={formatCurrency}
                   />
                 )}
                 node={(nodeProps) => (
