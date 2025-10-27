@@ -108,6 +108,14 @@ function SankeyNodeWithLabel({
   const adjustedX = x + 4;
   const adjustedY = y - 2;
   const adjustedHeight = height + 4;
+  const labelWidth = 168;
+  const isSourceNode = (payload.depth ?? 0) === 0;
+  const labelHorizontalPadding = 12;
+  const labelX = isSourceNode
+    ? x + width + labelHorizontalPadding
+    : x - labelWidth - labelHorizontalPadding;
+  const labelY = y - 6;
+  const labelHeight = height + 12;
 
   return (
     <g>
@@ -122,23 +130,29 @@ function SankeyNodeWithLabel({
         style={{ cursor: "default" }}
       />
       <foreignObject
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        style={{ pointerEvents: "none" }}
+        x={labelX}
+        y={labelY}
+        width={labelWidth}
+        height={labelHeight}
+        style={{ overflow: "visible", pointerEvents: "none" }}
       >
         <div
           style={{
             boxSizing: "border-box",
             display: "flex",
             flexDirection: "column",
-            alignItems: "flex-start",
+            alignItems: isSourceNode ? "flex-start" : "flex-end",
             justifyContent: "center",
             width: "100%",
             height: "100%",
-            padding: "0.5rem",
+            padding: "0.25rem 0.5rem",
             gap: 6,
+            backgroundColor: "hsla(var(--muted), 0.35)",
+            border: "1px solid hsla(var(--muted-foreground), 0.2)",
+            borderRadius: 6,
+            backdropFilter: "blur(2px)",
+            boxShadow: "0 4px 12px rgba(15, 23, 42, 0.08)",
+            textAlign: isSourceNode ? "left" : "right",
           }}
         >
           {payload.name ? (
