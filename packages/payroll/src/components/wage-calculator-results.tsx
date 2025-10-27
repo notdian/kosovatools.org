@@ -21,7 +21,6 @@ import { cn } from "@workspace/ui/lib/utils";
 
 import type {
   NetToGrossResult,
-  TaxBreakdownEntry,
   WageCalculatorResult,
 } from "../lib/wage-calculator";
 
@@ -127,10 +126,6 @@ function SankeyNodeWithLabel({
             height: "100%",
             padding: "0.25rem 0.5rem",
             gap: 6,
-            backgroundColor: "hsla(var(--muted), 0.35)",
-            border: "1px solid hsla(var(--muted-foreground), 0.2)",
-            borderRadius: 6,
-            boxShadow: "0 4px 12px rgba(15, 23, 42, 0.08)",
             textAlign: isSourceNode ? "left" : "right",
           }}
         >
