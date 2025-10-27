@@ -1,19 +1,7 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-
 import "@workspace/ui/globals.css"
 import { Providers } from "@/components/providers"
 import { ThemeToggle } from "@/components/theme-toggle"
-
-const fontSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
-
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-})
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://kosovatools.org"),
@@ -46,9 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
-      >
+      <body className="font-sans antialiased">
         <Providers>
           <ThemeToggle className="fixed right-6 top-6 z-50" />
           {children}

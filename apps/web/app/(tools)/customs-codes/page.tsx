@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card"
-import { CustomsExplorer } from "@workspace/ui/components/customs-codes"
+import { CustomsExplorer } from "@workspace/customs-codes"
 import { AlertTriangle } from "lucide-react"
 
 const buildTime = process.env.NEXT_PUBLIC_BUILD_TIME ?? "—"

@@ -4,6 +4,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
+      "@workspace/customs-codes": ["../../packages/customs-codes/src/index.ts"],
+      "@workspace/customs-codes/*": ["../../packages/customs-codes/src/*"],
+      "@workspace/data-insights": ["../../packages/data-insights/src/index.ts"],
+      "@workspace/data-insights/*": ["../../packages/data-insights/src/*"],
+      "@workspace/payroll": ["../../packages/payroll/src/index.ts"],
+      "@workspace/payroll/*": ["../../packages/payroll/src/*"],
       "@workspace/ui/*": ["../../packages/ui/src/*"]
     },
     "plugins": [

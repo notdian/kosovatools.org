@@ -2,4 +2,6 @@
 __pycache__/
 *.pyc
 data/
+!data/
+!data/*.json
 !data/.gitkeep

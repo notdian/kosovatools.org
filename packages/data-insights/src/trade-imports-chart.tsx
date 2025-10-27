@@ -21,8 +21,8 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "../chart.tsx"
-import { createChromaPalette } from "../../lib/chart-palette.ts"
+} from "@workspace/ui/components/chart"
+import { createChromaPalette } from "@workspace/ui/lib/chart-palette"
 
 const [importsColor] = createChromaPalette(1)
 

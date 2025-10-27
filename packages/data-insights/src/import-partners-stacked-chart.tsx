@@ -22,7 +22,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "../chart.tsx"
+} from "@workspace/ui/components/chart"
 import { buildStackedChartView } from "./stacked-chart-helpers.ts"
 import { StackedKeySelector } from "./stacked-key-selector.tsx"
 
