@@ -6,28 +6,33 @@ import { cn } from "@workspace/ui/lib/utils";
 
 type JobType = "primary" | "secondary";
 
+export type CalculationMode = "grossToNet" | "netToGross";
+
 export interface WageCalculatorInputsProps {
+  mode: CalculationMode;
   grossPay: number;
   targetNetPay: number;
   minimumWage: number;
-  employeePensionRate: number;
   employerPensionRate: number;
+  employeePensionRate: number;
   jobType: JobType;
+  onModeChange: (value: CalculationMode) => void;
   onGrossPayChange: (value: number) => void;
   onTargetNetPayChange: (value: number) => void;
   onMinimumWageChange: (value: number) => void;
-  onEmployeePensionRateChange: (value: number) => void;
   onEmployerPensionRateChange: (value: number) => void;
   onJobTypeChange: (value: JobType) => void;
 }
 
 function WageCalculatorInputs({
+  mode,
   grossPay,
   targetNetPay,
   minimumWage,
   employeePensionRate,
   employerPensionRate,
   jobType,
+  onModeChange,
   onGrossPayChange,
   onTargetNetPayChange,
   onMinimumWageChange,
@@ -47,31 +52,79 @@ function WageCalculatorInputs({
   return (
     <div className="grid gap-4">
       <div className="grid gap-2">
-        <Label htmlFor="gross-pay">Pagë bruto mujore (€)</Label>
-        <Input
-          id="gross-pay"
-          inputMode="decimal"
-          min={0}
-          step="0.01"
-          value={Number.isFinite(grossPay) ? grossPay : 0}
-          onChange={handleNumberChange(onGrossPayChange)}
-        />
+        <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Zgjidhni llogaritjen
+        </Label>
+        <div className="grid grid-cols-1 gap-2 sm:max-w-md sm:grid-cols-2">
+          {[
+            {
+              value: "grossToNet" as CalculationMode,
+              label: "Nga bruto në neto",
+              description: "Futni pagën bruto për të parë pagën neto.",
+            },
+            {
+              value: "netToGross" as CalculationMode,
+              label: "Nga neto në bruto",
+              description: "Futni pagën neto të synuar për të gjetur pagën bruto.",
+            },
+          ].map((option) => {
+            const isActive = mode === option.value;
+
+            return (
+              <button
+                key={option.value}
+                type="button"
+                className={cn(
+                  "rounded-lg border px-4 py-3 text-left text-sm transition-colors",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+                  isActive
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border/60 bg-muted/40 text-foreground",
+                )}
+                onClick={() => onModeChange(option.value)}
+              >
+                <span className="block font-medium">{option.label}</span>
+                <span className="mt-1 block text-xs text-muted-foreground">
+                  {option.description}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
-      <div className="grid gap-2">
-        <Label htmlFor="net-target">Pagë neto e synuar (€)</Label>
-        <Input
-          id="net-target"
-          inputMode="decimal"
-          min={0}
-          step="0.01"
-          value={Number.isFinite(targetNetPay) ? targetNetPay : 0}
-          onChange={handleNumberChange(onTargetNetPayChange)}
-        />
-        <p className="text-xs text-muted-foreground">
-          Futni pagën neto që dëshironi dhe kalkulatori do të tregojë pagën
-          bruto të nevojshme.
-        </p>
-      </div>
+      {mode === "grossToNet" ? (
+        <div className="grid gap-2">
+          <Label htmlFor="gross-pay">Pagë bruto mujore (€)</Label>
+          <Input
+            id="gross-pay"
+            inputMode="decimal"
+            min={0}
+            step="0.01"
+            value={Number.isFinite(grossPay) ? grossPay : 0}
+            onChange={handleNumberChange(onGrossPayChange)}
+          />
+          <p className="text-xs text-muted-foreground">
+            Shkruani pagën bruto mujore për të llogaritur pagën neto pas tatimit
+            dhe Trustit.
+          </p>
+        </div>
+      ) : (
+        <div className="grid gap-2">
+          <Label htmlFor="net-target">Pagë neto e synuar (€)</Label>
+          <Input
+            id="net-target"
+            inputMode="decimal"
+            min={0}
+            step="0.01"
+            value={Number.isFinite(targetNetPay) ? targetNetPay : 0}
+            onChange={handleNumberChange(onTargetNetPayChange)}
+          />
+          <p className="text-xs text-muted-foreground">
+            Shkruani pagën neto që dëshironi dhe kalkulatori do të tregojë pagën
+            bruto të nevojshme.
+          </p>
+        </div>
+      )}
       <div className="grid gap-2">
         <Label htmlFor="minimum-wage">Pagë minimale e përjashtuar nga tatimi (€)</Label>
         <Input
