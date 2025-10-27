@@ -129,7 +129,6 @@ function SankeyNodeWithLabel({
         style={{ pointerEvents: "none" }}
       >
         <div
-          xmlns="http://www.w3.org/1999/xhtml"
           style={{
             boxSizing: "border-box",
             display: "flex",
@@ -232,7 +231,6 @@ function SankeyLinkWithLabel({
           style={{ overflow: "visible", pointerEvents: "none" }}
         >
           <div
-            xmlns="http://www.w3.org/1999/xhtml"
             style={{
               boxSizing: "border-box",
               display: "flex",
