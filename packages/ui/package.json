@@ -46,6 +46,8 @@
     "./lib/*": "./src/lib/*.ts",
     "./components/customs-codes": "./src/components/customs-codes/index.ts",
     "./components/customs-codes/*": "./src/components/customs-codes/*.tsx",
+    "./components/payroll": "./src/components/payroll/index.ts",
+    "./components/payroll/*": "./src/components/payroll/*.tsx",
     "./components/*": "./src/components/*.tsx",
     "./hooks/*": "./src/hooks/*.ts"
   }
