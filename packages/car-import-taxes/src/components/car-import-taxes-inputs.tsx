@@ -5,8 +5,8 @@ import { Label } from "@workspace/ui/components/label"
 import { Checkbox } from "@workspace/ui/components/checkbox"
 import { cn } from "@workspace/ui/lib/utils"
 
-import type { FuelType } from "../lib/car-import-calculator"
-import { CAR_IMPORT_CONSTANTS } from "../lib/car-import-calculator"
+import type { FuelType } from "../lib/car-import-calculator.js"
+import { CAR_IMPORT_CONSTANTS } from "../lib/car-import-calculator.js"
 
 export interface CarImportTaxesInputsProps {
   vehicleYear: number
@@ -38,14 +38,19 @@ export interface CarImportTaxesInputsProps {
   onOtherFeesChange: (value: number) => void
 }
 
-function parseNumberFromEvent(
-  event: React.ChangeEvent<HTMLInputElement>,
-): number {
+interface TextInputChangeEvent {
+  target: { value: string }
+}
+
+type CheckboxCheckedState = boolean | "indeterminate" | undefined
+
+function parseNumberFromEvent(event: TextInputChangeEvent): number {
   const parsedValue = Number.parseFloat(event.target.value)
   return Number.isFinite(parsedValue) ? parsedValue : 0
 }
 
-const EURO_OPTIONS = [4, 5, 6, 7]
+const EURO_OPTIONS = [4, 5, 6, 7] as const
+const DEFAULT_EURO_STANDARD = EURO_OPTIONS[0]
 
 export function CarImportTaxesInputs({
   vehicleYear,
@@ -100,7 +105,9 @@ export function CarImportTaxesInputs({
               min={currentYear - CAR_IMPORT_CONSTANTS.MAX_VEHICLE_AGE}
               max={currentYear}
               value={Number.isFinite(vehicleYear) ? vehicleYear : currentYear}
-              onChange={(event) => onVehicleYearChange(parseNumberFromEvent(event))}
+              onChange={(event: TextInputChangeEvent) =>
+                onVehicleYearChange(parseNumberFromEvent(event))
+              }
             />
             <p className="text-xs text-muted-foreground">
               Automjetet më të vjetra se {CAR_IMPORT_CONSTANTS.MAX_VEHICLE_AGE} vjet nuk
@@ -115,9 +122,11 @@ export function CarImportTaxesInputs({
                 "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
               )}
               value={`Euro ${euroStandard}`}
-              onChange={(event) => {
+              onChange={(event: TextInputChangeEvent) => {
                 const numericValue = Number.parseInt(event.target.value.replace(/[^0-9]/g, ""), 10)
-                onEuroStandardChange(Number.isFinite(numericValue) ? numericValue : EURO_OPTIONS[0])
+                onEuroStandardChange(
+                  Number.isFinite(numericValue) ? numericValue : DEFAULT_EURO_STANDARD,
+                )
               }}
             >
               {EURO_OPTIONS.map((option) => (
@@ -140,7 +149,9 @@ export function CarImportTaxesInputs({
                 "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
               )}
               value={fuelType}
-              onChange={(event) => onFuelTypeChange(event.target.value as FuelType)}
+              onChange={(event: TextInputChangeEvent) =>
+                onFuelTypeChange(event.target.value as FuelType)
+              }
             >
               <option value="petrol">Benzinë</option>
               <option value="diesel">Naftë</option>
@@ -156,8 +167,10 @@ export function CarImportTaxesInputs({
               min={0}
               step={1}
               value={Number.isFinite(engineCapacityCc) ? engineCapacityCc : 0}
-              onChange={(event) =>
-                onEngineCapacityChange(Math.max(0, Math.round(parseNumberFromEvent(event))))
+              onChange={(event: TextInputChangeEvent) =>
+                onEngineCapacityChange(
+                  Math.max(0, Math.round(parseNumberFromEvent(event))),
+                )
               }
             />
             <p className="text-xs text-muted-foreground">
@@ -169,7 +182,9 @@ export function CarImportTaxesInputs({
           <Checkbox
             id="brand-new"
             checked={isBrandNew}
-            onCheckedChange={(checked) => onIsBrandNewChange(Boolean(checked))}
+            onCheckedChange={(checked: CheckboxCheckedState) =>
+              onIsBrandNewChange(Boolean(checked))
+            }
           />
           <div className="space-y-1 text-sm">
             <Label htmlFor="brand-new" className="font-medium">
@@ -198,7 +213,9 @@ export function CarImportTaxesInputs({
               min={0}
               step="0.01"
               value={Number.isFinite(purchasePrice) ? purchasePrice : 0}
-              onChange={(event) => onPurchasePriceChange(parseNumberFromEvent(event))}
+              onChange={(event: TextInputChangeEvent) =>
+                onPurchasePriceChange(parseNumberFromEvent(event))
+              }
             />
           </div>
           <div className="grid gap-2">
@@ -209,7 +226,9 @@ export function CarImportTaxesInputs({
               min={0}
               step="0.01"
               value={Number.isFinite(shippingCost) ? shippingCost : 0}
-              onChange={(event) => onShippingCostChange(parseNumberFromEvent(event))}
+              onChange={(event: TextInputChangeEvent) =>
+                onShippingCostChange(parseNumberFromEvent(event))
+              }
             />
           </div>
           <div className="grid gap-2">
@@ -220,7 +239,9 @@ export function CarImportTaxesInputs({
               min={0}
               step="0.01"
               value={Number.isFinite(insuranceCost) ? insuranceCost : 0}
-              onChange={(event) => onInsuranceCostChange(parseNumberFromEvent(event))}
+              onChange={(event: TextInputChangeEvent) =>
+                onInsuranceCostChange(parseNumberFromEvent(event))
+              }
             />
           </div>
           <div className="grid gap-2">
@@ -232,7 +253,7 @@ export function CarImportTaxesInputs({
               step="0.01"
               value={declaredCif ?? ""}
               placeholder="Llogaritet automatikisht nëse lihet bosh"
-              onChange={(event) => {
+              onChange={(event: TextInputChangeEvent) => {
                 const value = event.target.value.trim()
                 if (value === "") {
                   onDeclaredCifChange(null)
@@ -250,7 +271,9 @@ export function CarImportTaxesInputs({
           <Checkbox
             id="preferential-origin"
             checked={preferentialEuOrigin}
-            onCheckedChange={(checked) => onPreferentialEuOriginChange(Boolean(checked))}
+            onCheckedChange={(checked: CheckboxCheckedState) =>
+              onPreferentialEuOriginChange(Boolean(checked))
+            }
           />
           <div className="space-y-1 text-sm">
             <Label htmlFor="preferential-origin" className="font-medium">
@@ -279,7 +302,9 @@ export function CarImportTaxesInputs({
               min={0}
               step="0.01"
               value={Number.isFinite(ecoTax) ? ecoTax : CAR_IMPORT_CONSTANTS.annualFees.environmentalTax}
-              onChange={(event) => onEcoTaxChange(parseNumberFromEvent(event))}
+              onChange={(event: TextInputChangeEvent) =>
+                onEcoTaxChange(parseNumberFromEvent(event))
+              }
             />
           </div>
           <div className="grid gap-2">
@@ -290,7 +315,9 @@ export function CarImportTaxesInputs({
               min={0}
               step="0.01"
               value={Number.isFinite(roadTax) ? roadTax : CAR_IMPORT_CONSTANTS.annualFees.roadTax.defaultPassenger}
-              onChange={(event) => onRoadTaxChange(parseNumberFromEvent(event))}
+              onChange={(event: TextInputChangeEvent) =>
+                onRoadTaxChange(parseNumberFromEvent(event))
+              }
             />
           </div>
           <div className="grid gap-2">
@@ -301,7 +328,9 @@ export function CarImportTaxesInputs({
               min={0}
               step="0.01"
               value={Number.isFinite(otherFees) ? otherFees : 0}
-              onChange={(event) => onOtherFeesChange(parseNumberFromEvent(event))}
+              onChange={(event: TextInputChangeEvent) =>
+                onOtherFeesChange(parseNumberFromEvent(event))
+              }
             />
           </div>
         </div>
