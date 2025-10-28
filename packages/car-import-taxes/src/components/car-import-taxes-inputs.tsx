@@ -5,8 +5,8 @@ import { Label } from "@workspace/ui/components/label"
 import { Checkbox } from "@workspace/ui/components/checkbox"
 import { cn } from "@workspace/ui/lib/utils"
 
-import type { FuelType } from "../lib/car-import-calculator.js"
-import { CAR_IMPORT_CONSTANTS } from "../lib/car-import-calculator.js"
+import type { FuelType } from "../lib/car-import-calculator"
+import { CAR_IMPORT_CONSTANTS } from "../lib/car-import-calculator"
 
 export interface CarImportTaxesInputsProps {
   vehicleYear: number

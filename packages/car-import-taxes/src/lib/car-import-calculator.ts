@@ -1,4 +1,4 @@
-import { ANNUAL_FEES, EXCISE_TABLE, type ExciseBracket, type ExciseRate } from "./config.js"
+import { ANNUAL_FEES, EXCISE_TABLE, type ExciseBracket, type ExciseRate } from "./config"
 
 export type FuelType = "petrol" | "diesel" | "hybrid" | "electric"
 
