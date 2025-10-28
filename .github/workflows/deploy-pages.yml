@@ -3,6 +3,8 @@ name: Build & Deploy Next.js Static (pnpm)
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -11,7 +13,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: "pages-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
@@ -51,11 +53,13 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Fetch customs dataset
+        if: github.event_name != 'pull_request'
         run: pnpm --filter @workspace/customs-data fetch-tarrifs
         env:
           CUSTOMS_DATA_SOURCE_URL: ${{ secrets.CUSTOMS_DATA_SOURCE_URL }}
 
       - name: Trim customs dataset
+        if: github.event_name != 'pull_request'
         run: pnpm --filter @workspace/customs-data trim-tarrifs
 
       - name: Build Turborepo packages
@@ -70,6 +74,7 @@ jobs:
 
   deploy:
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -78,3 +83,17 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  deploy-preview:
+    needs: build
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    environment:
+      name: "preview/pr-${{ github.event.pull_request.number }}"
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy preview to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          preview: true
