@@ -377,7 +377,7 @@ function WageCalculatorResults({
             <div className="-mx-1 overflow-x-auto px-1">
               <ChartContainer
                 config={chartConfig}
-                className="h-[260px] min-w-[420px] !aspect-auto max-w-full sm:min-w-0"
+                className="h-[260px] w-full min-w-0 !aspect-auto"
               >
                 <Sankey
                   data={{ nodes: sankeyNodes, links: sankeyLinks }}
