@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card"
 
-import type { CarImportTaxesResult } from "../lib/car-import-calculator"
+import type { CarImportTaxesResult } from "../lib/car-import-calculator.js"
 
 export interface CarImportTaxesResultsProps {
   result: CarImportTaxesResult
@@ -57,7 +57,7 @@ export function CarImportTaxesResults({
                 Automjeti nuk plotëson kushtet për import sipas rregullave aktuale.
               </p>
               <ul className="list-disc space-y-1 pl-5">
-                {result.eligibility.reasons.map((reason) => (
+                {result.eligibility.reasons.map((reason: string) => (
                   <li key={reason}>{reason}</li>
                 ))}
               </ul>
@@ -183,7 +183,7 @@ export function CarImportTaxesResults({
         </CardHeader>
         <CardContent>
           <ul className="list-disc space-y-2 pl-5 text-sm text-muted-foreground">
-            {result.assumptions.map((assumption) => (
+            {result.assumptions.map((assumption: string) => (
               <li key={assumption}>{assumption}</li>
             ))}
             <li>{result.excise.reason}</li>

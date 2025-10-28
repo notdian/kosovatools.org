@@ -1,4 +1,4 @@
-import { ANNUAL_FEES, EXCISE_TABLE, type ExciseBracket } from "./config"
+import { ANNUAL_FEES, EXCISE_TABLE, type ExciseBracket, type ExciseRate } from "./config.js"
 
 export type FuelType = "petrol" | "diesel" | "hybrid" | "electric"
 
@@ -82,7 +82,7 @@ function clampNonNegative(value: number): number {
 
 function findExciseBracket(engineCapacityCc: number): ExciseBracket | null {
   return (
-    EXCISE_TABLE.find((bracket) => {
+    EXCISE_TABLE.find((bracket: ExciseBracket) => {
       const meetsMin = engineCapacityCc >= bracket.minCc
       const meetsMax =
         bracket.maxCc === null ? true : engineCapacityCc <= bracket.maxCc
@@ -133,7 +133,7 @@ function determineExciseAmount({
     }
   }
 
-  const matchingRate = bracket.rates.find((rate) => {
+  const matchingRate = bracket.rates.find((rate: ExciseRate) => {
     if (rate.maxAge === null) {
       return true
     }
