@@ -374,16 +374,17 @@ function WageCalculatorResults({
             </p>
           </div>
           {hasFlow ? (
-            <ChartContainer
-              config={chartConfig}
-              className="h-[260px] !aspect-auto"
-            >
-              <Sankey
-                data={{ nodes: sankeyNodes, links: sankeyLinks }}
-                nodePadding={24}
-                nodeWidth={18}
-                iterations={32}
-                margin={{ top: 12, bottom: 12, left: 8, right: 8 }}
+            <div className="-mx-1 overflow-x-auto px-1">
+              <ChartContainer
+                config={chartConfig}
+                className="h-[260px] min-w-[420px] !aspect-auto max-w-full sm:min-w-0"
+              >
+                <Sankey
+                  data={{ nodes: sankeyNodes, links: sankeyLinks }}
+                  nodePadding={24}
+                  nodeWidth={18}
+                  iterations={32}
+                  margin={{ top: 12, bottom: 12, left: 8, right: 8 }}
                 linkCurvature={0.45}
                 link={(linkProps) => (
                   <SankeyLinkWithLabel
@@ -397,40 +398,41 @@ function WageCalculatorResults({
                   />
                 )}
               >
-                <ChartTooltip
-                  content={
-                    <ChartTooltipContent
-                      indicator="dot"
-                      labelFormatter={() => "Rrjedha e pagës"}
-                      formatter={(value, _name, entry) => {
-                        const numericValue =
-                          typeof value === "number"
-                            ? value
-                            : Number.parseFloat(String(value ?? 0));
-                        const payload = entry?.payload as
-                          | {
-                              source?: { name?: string };
-                              target?: { name?: string };
-                              name?: string;
-                            }
-                          | undefined;
-                        const sourceName = payload?.source?.name;
-                        const targetName = payload?.target?.name;
-                        const label =
-                          sourceName && targetName
-                            ? `${sourceName} → ${targetName}`
-                            : payload?.name || "Rrjedha";
+                  <ChartTooltip
+                    content={
+                      <ChartTooltipContent
+                        indicator="dot"
+                        labelFormatter={() => "Rrjedha e pagës"}
+                        formatter={(value, _name, entry) => {
+                          const numericValue =
+                            typeof value === "number"
+                              ? value
+                              : Number.parseFloat(String(value ?? 0));
+                          const payload = entry?.payload as
+                            | {
+                                source?: { name?: string };
+                                target?: { name?: string };
+                                name?: string;
+                              }
+                            | undefined;
+                          const sourceName = payload?.source?.name;
+                          const targetName = payload?.target?.name;
+                          const label =
+                            sourceName && targetName
+                              ? `${sourceName} → ${targetName}`
+                              : payload?.name || "Rrjedha";
 
-                        return [
-                          formatCurrency(Math.max(numericValue, 0)),
-                          label,
-                        ];
-                      }}
-                    />
-                  }
-                />
-              </Sankey>
-            </ChartContainer>
+                          return [
+                            formatCurrency(Math.max(numericValue, 0)),
+                            label,
+                          ];
+                        }}
+                      />
+                    }
+                  />
+                </Sankey>
+              </ChartContainer>
+            </div>
           ) : (
             <p className="text-xs text-muted-foreground">
               Plotësoni të dhënat për të parë vizualizimin e rrjedhës së pagës.

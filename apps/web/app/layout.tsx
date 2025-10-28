@@ -42,16 +42,30 @@ export default function RootLayout({
         <Providers>
           <div className="flex min-h-svh flex-col bg-background">
             <header className="border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-              <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
-                <Link
-                  href="/"
-                  className="flex items-center gap-2 text-sm font-semibold tracking-tight transition hover:text-primary sm:text-base"
-                >
-                  <LayoutGrid aria-hidden className="h-4 w-4" />
-                  Kosova Tools
-                </Link>
+              <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-6 py-3 sm:py-4">
+                <div className="flex flex-1 items-center justify-between gap-4">
+                  <Link
+                    href="/"
+                    className="flex items-center gap-2 text-sm font-semibold tracking-tight transition hover:text-primary sm:text-base"
+                  >
+                    <LayoutGrid aria-hidden className="h-4 w-4" />
+                    Kosova Tools
+                  </Link>
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <ThemeToggle />
+                    <a
+                      className="inline-flex items-center gap-2 rounded-full border border-border/60 px-2.5 py-1 font-medium transition hover:border-primary hover:text-primary"
+                      href="https://github.com/notdian/kosovatools.org"
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      <Github aria-hidden className="h-4 w-4" />
+                      <span className="hidden sm:inline">GitHub</span>
+                    </a>
+                  </div>
+                </div>
 
-                <nav className="flex flex-1 items-center justify-center gap-6 text-sm text-muted-foreground sm:text-base">
+                <nav className="hidden flex-1 items-center justify-end gap-6 text-sm text-muted-foreground md:flex md:justify-center md:text-base">
                   <Link className="transition hover:text-primary" href="/#tools">
                     Tools
                   </Link>
@@ -62,19 +76,6 @@ export default function RootLayout({
                     About
                   </Link>
                 </nav>
-
-                <div className="flex items-center gap-2">
-                  <ThemeToggle />
-                  <a
-                    className="inline-flex items-center gap-2 rounded-full border border-border/60 px-3 py-1 text-xs font-medium transition hover:border-primary hover:text-primary sm:text-sm"
-                    href="https://github.com/notdian/kosovatools.org"
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    <Github aria-hidden className="h-4 w-4" />
-                    GitHub
-                  </a>
-                </div>
               </div>
             </header>
 
