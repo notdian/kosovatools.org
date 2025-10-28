@@ -135,7 +135,7 @@ export default function Page() {
             const Icon = tool.icon
 
             return (
-              <Card key={tool.name} className="h-full border-border/70">
+              <Card key={tool.name} className="h-full border-border/70 p-0">
                 <CardHeader className="gap-4">
                   <div className="flex items-center justify-between">
                     <span className="rounded-full border border-border/70 px-3 py-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
