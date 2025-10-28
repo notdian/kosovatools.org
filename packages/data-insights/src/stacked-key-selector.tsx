@@ -38,7 +38,7 @@ export function StackedKeySelector({
   searchPlaceholder,
   includeOther,
   onIncludeOtherChange,
-  promoteLabel = "Exclude entries from \u201COther\u201D bucket",
+  promoteLabel = "Enable \u201COther\u201D aggregation",
   excludedKeys: controlledExcludedKeys,
   onExcludedKeysChange,
   excludedSearchPlaceholder,
@@ -219,21 +219,27 @@ export function StackedKeySelector({
             "flex flex-1 flex-col gap-3 rounded-md border border-dashed border-border/50 p-2 transition-opacity "
           }
         >
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id={includeOtherId}
-                checked={includeOther}
-                onCheckedChange={(checked) =>
-                  onIncludeOtherChange(checked === true)
-                }
-              />
-              <Label
-                htmlFor={includeOtherId}
-                className="cursor-pointer font-medium text-muted-foreground"
-              >
-                {promoteLabel}
-              </Label>
+          <div className="flex flex-wrap items-start justify-between gap-2">
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id={includeOtherId}
+                  checked={includeOther}
+                  onCheckedChange={(checked) =>
+                    onIncludeOtherChange(checked === true)
+                  }
+                />
+                <Label
+                  htmlFor={includeOtherId}
+                  className="cursor-pointer font-medium text-muted-foreground"
+                >
+                  {promoteLabel}
+                </Label>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                The selection below controls which entries are excluded from the
+                “Other” aggregation.
+              </p>
             </div>
             <div
               className={
