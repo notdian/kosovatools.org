@@ -1,7 +1,14 @@
 import * as React from "react";
 
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from "@workspace/ui/components/field";
 import { Input } from "@workspace/ui/components/input";
-import { Label } from "@workspace/ui/components/label";
 import { cn } from "@workspace/ui/lib/utils";
 
 import type { JobType } from "../lib/wage-calculator";
@@ -48,10 +55,10 @@ function WageCalculatorInputs({
 
   return (
     <div className="grid gap-4">
-      <div className="grid gap-2">
-        <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+      <FieldSet className="space-y-3">
+        <FieldLegend className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Zgjidhni llogaritjen
-        </Label>
+        </FieldLegend>
         <div className="grid grid-cols-1 gap-2 sm:max-w-md sm:grid-cols-2">
           {[
             {
@@ -89,94 +96,106 @@ function WageCalculatorInputs({
             );
           })}
         </div>
-      </div>
+      </FieldSet>
       {mode === "grossToNet" ? (
-        <div className="grid gap-2">
-          <Label htmlFor="gross-pay">Pagë bruto mujore (€)</Label>
-          <Input
-            id="gross-pay"
-            inputMode="decimal"
-            min={0}
-            step="0.01"
-            value={Number.isFinite(grossPay) ? grossPay : 0}
-            onChange={handleNumberChange(onGrossPayChange)}
-          />
-          <p className="text-xs text-muted-foreground">
+        <Field>
+          <FieldLabel htmlFor="gross-pay">Pagë bruto mujore (€)</FieldLabel>
+          <FieldContent>
+            <Input
+              id="gross-pay"
+              inputMode="decimal"
+              min={0}
+              step="0.01"
+              value={Number.isFinite(grossPay) ? grossPay : 0}
+              onChange={handleNumberChange(onGrossPayChange)}
+            />
+          </FieldContent>
+          <FieldDescription className="text-xs text-muted-foreground">
             Shkruani pagën bruto mujore për të llogaritur pagën neto pas tatimit
             dhe Trustit.
-          </p>
-        </div>
+          </FieldDescription>
+        </Field>
       ) : (
-        <div className="grid gap-2">
-          <Label htmlFor="net-target">Pagë neto e synuar (€)</Label>
-          <Input
-            id="net-target"
-            inputMode="decimal"
-            min={0}
-            step="0.01"
-            value={Number.isFinite(targetNetPay) ? targetNetPay : 0}
-            onChange={handleNumberChange(onTargetNetPayChange)}
-          />
-          <p className="text-xs text-muted-foreground">
+        <Field>
+          <FieldLabel htmlFor="net-target">Pagë neto e synuar (€)</FieldLabel>
+          <FieldContent>
+            <Input
+              id="net-target"
+              inputMode="decimal"
+              min={0}
+              step="0.01"
+              value={Number.isFinite(targetNetPay) ? targetNetPay : 0}
+              onChange={handleNumberChange(onTargetNetPayChange)}
+            />
+          </FieldContent>
+          <FieldDescription className="text-xs text-muted-foreground">
             Shkruani pagën neto që dëshironi dhe kalkulatori do të tregojë pagën
             bruto të nevojshme.
-          </p>
-        </div>
+          </FieldDescription>
+        </Field>
       )}
-      <div className="grid gap-2 sm:grid-cols-2">
-        <div className="grid gap-2">
-          <Label htmlFor="employee-pension">Kontributi i punonjësit (%)</Label>
-          <Input
-            id="employee-pension"
-            inputMode="decimal"
-            min={0}
-            max={100}
-            step="0.1"
-            value={
-              Number.isFinite(employeePensionRate) ? employeePensionRate : 0
-            }
-            onChange={handleNumberChange(onEmployeePensionRateChange)}
-          />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="employer-pension">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field>
+          <FieldLabel htmlFor="employee-pension">
+            Kontributi i punonjësit (%)
+          </FieldLabel>
+          <FieldContent>
+            <Input
+              id="employee-pension"
+              inputMode="decimal"
+              min={0}
+              max={100}
+              step="0.1"
+              value={
+                Number.isFinite(employeePensionRate) ? employeePensionRate : 0
+              }
+              onChange={handleNumberChange(onEmployeePensionRateChange)}
+            />
+          </FieldContent>
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="employer-pension">
             Kontributi i punëdhënësit (%)
-          </Label>
-          <Input
-            id="employer-pension"
-            inputMode="decimal"
-            min={0}
-            max={100}
-            step="0.1"
-            value={
-              Number.isFinite(employerPensionRate) ? employerPensionRate : 0
-            }
-            onChange={handleNumberChange(onEmployerPensionRateChange)}
-          />
-        </div>
+          </FieldLabel>
+          <FieldContent>
+            <Input
+              id="employer-pension"
+              inputMode="decimal"
+              min={0}
+              max={100}
+              step="0.1"
+              value={
+                Number.isFinite(employerPensionRate) ? employerPensionRate : 0
+              }
+              onChange={handleNumberChange(onEmployerPensionRateChange)}
+            />
+          </FieldContent>
+        </Field>
       </div>
       <p className="text-xs text-muted-foreground">
         Kontributet ligjore minimale janë 5% + 5%. Vlerat më të ulëta do të
         llogariten si ky minimum.
       </p>
-      <div className="grid gap-2">
-        <Label htmlFor="job-type">A është ky punësimi kryesor?</Label>
-        <select
-          id="job-type"
-          className={cn(
-            "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
-          )}
-          value={jobType}
-          onChange={(event) => onJobTypeChange(event.target.value as JobType)}
-        >
-          <option value="primary">Po, është punësimi im kryesor</option>
-          <option value="secondary">Jo, është punë shtesë</option>
-        </select>
-        <p className="text-xs text-muted-foreground">
+      <Field>
+        <FieldLabel htmlFor="job-type">A është ky punësimi kryesor?</FieldLabel>
+        <FieldContent>
+          <select
+            id="job-type"
+            className={cn(
+              "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+            )}
+            value={jobType}
+            onChange={(event) => onJobTypeChange(event.target.value as JobType)}
+          >
+            <option value="primary">Po, është punësimi im kryesor</option>
+            <option value="secondary">Jo, është punë shtesë</option>
+          </select>
+        </FieldContent>
+        <FieldDescription className="text-xs text-muted-foreground">
           Punësimet sekondare tatohen me normë fikse 10% pa shkallët progresive
           të punësimit kryesor.
-        </p>
-      </div>
+        </FieldDescription>
+      </Field>
     </div>
   );
 }
