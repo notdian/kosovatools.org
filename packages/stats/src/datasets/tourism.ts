@@ -25,6 +25,10 @@ export const tourismByRegion: TourismRegionRecord[] = (
   regionData as TourismRegionRecord[]
 ).slice(0)
 
+const AGGREGATE_COUNTRY_LABELS = new Set(["external"])
+
 export const tourismByCountry: TourismCountryRecord[] = (
   countryData as TourismCountryRecord[]
-).slice(0)
+)
+  .slice(0)
+  .filter(({ country }) => !AGGREGATE_COUNTRY_LABELS.has(country.toLowerCase()))
