@@ -22,6 +22,9 @@ export default function Page() {
           <Button asChild size="lg" variant="secondary">
             <Link href="/data-insights">See data insights</Link>
           </Button>
+          <Button asChild size="lg" variant="outline">
+            <Link href="/car-import-taxes">Estimate car import costs</Link>
+          </Button>
           <Button asChild size="lg" variant="ghost">
             <Link href="/wage-calculator">Plan your salary</Link>
           </Button>

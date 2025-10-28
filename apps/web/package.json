@@ -14,6 +14,7 @@
   "dependencies": {
     "@workspace/customs-codes": "workspace:*",
     "@workspace/data-insights": "workspace:*",
+    "@workspace/car-import-taxes": "workspace:*",
     "@workspace/payroll": "workspace:*",
     "@workspace/stats": "workspace:*",
     "@workspace/ui": "workspace:*",
