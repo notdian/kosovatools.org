@@ -161,7 +161,7 @@ export function TourismCountryStackedChart({
         searchPlaceholder="Search countries..."
         includeOther={includeOther}
         onIncludeOtherChange={handleIncludeOtherChange}
-        promoteLabel="Exclude countries from “Other” bucket"
+        promoteLabel="Enable “Other” aggregation"
         excludedKeys={excludedKeys}
         onExcludedKeysChange={setExcludedKeys}
       />

@@ -53,7 +53,7 @@ export function ImportPartnersStackedChart({
   )
 
   const [selectedKeys, setSelectedKeys] = React.useState<string[]>(defaultKeys)
-  const [includeOther, setIncludeOther] = React.useState(false)
+  const [includeOther, setIncludeOther] = React.useState(true)
   const [excludedKeys, setExcludedKeys] = React.useState<string[]>([])
 
   React.useEffect(() => {
@@ -129,7 +129,7 @@ export function ImportPartnersStackedChart({
         searchPlaceholder="Search countries..."
         includeOther={includeOther}
         onIncludeOtherChange={handleIncludeOtherChange}
-        promoteLabel="Exclude countries from “Other” bucket"
+        promoteLabel="Enable “Other” aggregation"
         excludedKeys={excludedKeys}
         onExcludedKeysChange={setExcludedKeys}
       />
