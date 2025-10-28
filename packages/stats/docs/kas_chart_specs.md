@@ -45,7 +45,7 @@ Generated from `data/kas_sources.json` on 2025-10-25.
   - `period`
   - `country`
   - `visitors`, `nights`.
-- **Extras:** Heatmap (country vs month); include aggregate row `External`.
+- **Extras:** Heatmap (country vs month).
 
 ### Imports by Partner — `kas_imports_by_partner.json`
 - **Primary chart:** Stacked area across the latest 12 months for top partners (include "Other" bucket).

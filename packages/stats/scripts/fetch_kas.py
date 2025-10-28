@@ -745,6 +745,8 @@ def fetch_tourism_country(out_dir: Path, months: Optional[int]):
     for time_code in pick:
         period = normalize_ym(time_code)
         for country_code, country_label in country_pairs:
+            if country_label.lower() == "external":
+                continue
             row: Dict[str, Any] = {
                 "period": period,
                 "country": country_label,
