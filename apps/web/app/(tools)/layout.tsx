@@ -11,7 +11,7 @@ export default function ToolsLayout({
       <footer className="border-t border-border/60 pt-6 text-xs text-muted-foreground sm:text-sm">
         <a
           className="inline-flex items-center gap-2 font-medium text-foreground transition hover:text-primary"
-          href="https://github.com/kosovatools/kosovatools.org"
+          href="https://github.com/notdian/kosovatools.org"
           rel="noreferrer"
           target="_blank"
         >
