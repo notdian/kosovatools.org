@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card"
 
-import type { CarImportTaxesResult } from "../lib/car-import-calculator.js"
+import type { CarImportTaxesResult } from "../lib/car-import-calculator"
 
 export interface CarImportTaxesResultsProps {
   result: CarImportTaxesResult

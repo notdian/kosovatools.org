@@ -26,6 +26,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@workspace/car-import-taxes':
+        specifier: workspace:*
+        version: link:../../packages/car-import-taxes
       '@workspace/customs-codes':
         specifier: workspace:*
         version: link:../../packages/customs-codes
@@ -87,6 +90,37 @@ importers:
       '@workspace/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      eslint:
+        specifier: ^9.32.0
+        version: 9.38.0(jiti@2.6.1)
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.3
+
+  packages/car-import-taxes:
+    dependencies:
+      '@workspace/ui':
+        specifier: workspace:*
+        version: link:../ui
+      react:
+        specifier: ^19.1.1
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.1.1
+        version: 19.2.0(react@19.2.0)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.9
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: ^19.1.7
+        version: 19.2.2(@types/react@19.2.2)
+      '@workspace/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       eslint:
         specifier: ^9.32.0
         version: 9.38.0(jiti@2.6.1)

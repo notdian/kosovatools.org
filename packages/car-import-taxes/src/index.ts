@@ -2,7 +2,7 @@ export {
   calculateCarImportTaxes,
   evaluateEligibility,
   CAR_IMPORT_CONSTANTS,
-} from "./lib/car-import-calculator.js"
+} from "./lib/car-import-calculator"
 export type {
   CarImportCalculationInput,
   CarImportTaxesResult,
@@ -12,10 +12,10 @@ export type {
   ExciseBreakdown,
   RegistrationFeesBreakdown,
   VatBreakdown,
-} from "./lib/car-import-calculator.js"
+} from "./lib/car-import-calculator"
 
-export { CarImportTaxesInputs } from "./components/car-import-taxes-inputs.js"
-export type { CarImportTaxesInputsProps } from "./components/car-import-taxes-inputs.js"
+export { CarImportTaxesInputs } from "./components/car-import-taxes-inputs"
+export type { CarImportTaxesInputsProps } from "./components/car-import-taxes-inputs"
 
-export { CarImportTaxesResults } from "./components/car-import-taxes-results.js"
-export type { CarImportTaxesResultsProps } from "./components/car-import-taxes-results.js"
+export { CarImportTaxesResults } from "./components/car-import-taxes-results"
+export type { CarImportTaxesResultsProps } from "./components/car-import-taxes-results"
