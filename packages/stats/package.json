@@ -12,7 +12,8 @@
   },
   "scripts": {
     "lint": "eslint src --max-warnings 0",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "fetch-data": "python3 scripts/fetch_kas.py --out data --months 36"
   },
   "devDependencies": {
     "@types/chroma-js": "^3.1.1",

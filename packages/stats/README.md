@@ -23,6 +23,8 @@ fully typed so UI surfaces can remain stateless and predictable.
   requirements (e.g., `docs/kas_chart_specs.md`).
 - `scripts/` — Python utilities for fetching and inspecting KAS data. Install
   requirements with `pip install -r packages/stats/requirements.txt`.
+- Refresh cached JSON with `pnpm --filter @workspace/stats fetch-data` (defaults
+  to the latest 36 months).
 
 ## Dataset Exports
 

@@ -17,8 +17,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  fetch-stats-data:
     runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.stats-key.outputs.key }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,13 +31,93 @@ jobs:
           python-version: "3.11"
 
       - name: Install stats dependencies
-        run: python -m pip install --upgrade pip && python -m pip install -r packages/stats/requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r packages/stats/requirements.txt
+
+      - name: Compute stats dataset cache key
+        id: stats-key
+        run: |
+          echo "key=stats-data-$(date -u +%Y%m%d)-${{ hashFiles('packages/stats/scripts/fetch_kas.py', 'packages/stats/requirements.txt') }}" >> $GITHUB_OUTPUT
+
+      - name: Restore cached KAS datasets
+        id: cache-stats
+        uses: actions/cache@v4
+        with:
+          path: packages/stats/data
+          key: ${{ steps.stats-key.outputs.key }}
+          restore-keys: |
+            stats-data-
 
       - name: Refresh KAS datasets
+        if: steps.cache-stats.outputs.cache-hit != 'true'
         run: python packages/stats/scripts/fetch_kas.py --out packages/stats/data --months 36
+
+  fetch-customs-data:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.customs-key.outputs.key }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compute customs dataset cache key
+        id: customs-key
+        run: |
+          echo "key=customs-data-$(date -u +%Y%m%d)-${{ hashFiles('packages/customs-data/scripts/fetch-tarrifs.mjs', 'packages/customs-data/scripts/trim-tarrifs.mjs') }}" >> $GITHUB_OUTPUT
+
+      - name: Restore cached customs dataset
+        id: cache-customs
+        uses: actions/cache@v4
+        with:
+          path: packages/customs-data/data
+          key: ${{ steps.customs-key.outputs.key }}
+          restore-keys: |
+            customs-data-
+
+      - name: Set up Node.js
+        if: steps.cache-customs.outputs.cache-hit != 'true' && github.event_name != 'pull_request'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fetch and trim customs dataset
+        if: steps.cache-customs.outputs.cache-hit != 'true' && github.event_name != 'pull_request'
+        env:
+          CUSTOMS_DATA_SOURCE_URL: ${{ secrets.CUSTOMS_DATA_SOURCE_URL }}
+        run: node packages/customs-data/scripts/fetch-data.mjs
+
+      - name: Skip customs refresh on pull requests without cache
+        if: steps.cache-customs.outputs.cache-hit != 'true' && github.event_name == 'pull_request'
+        run: echo "Customs dataset refresh skipped on pull requests to avoid hitting external providers."
+
+  build:
+    needs:
+      - fetch-stats-data
+      - fetch-customs-data
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+
+      - name: Restore cached KAS datasets
+        uses: actions/cache/restore@v4
+        with:
+          path: packages/stats/data
+          key: ${{ needs.fetch-stats-data.outputs.cache-key }}
+          restore-keys: |
+            stats-data-
+
+      - name: Restore cached customs dataset
+        uses: actions/cache/restore@v4
+        with:
+          path: packages/customs-data/data
+          key: ${{ needs.fetch-customs-data.outputs.cache-key }}
+          restore-keys: |
+            customs-data-
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -51,16 +133,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
-
-      - name: Fetch customs dataset
-        if: github.event_name != 'pull_request'
-        run: pnpm --filter @workspace/customs-data fetch-tarrifs
-        env:
-          CUSTOMS_DATA_SOURCE_URL: ${{ secrets.CUSTOMS_DATA_SOURCE_URL }}
-
-      - name: Trim customs dataset
-        if: github.event_name != 'pull_request'
-        run: pnpm --filter @workspace/customs-data trim-tarrifs
 
       - name: Build Turborepo packages
         run: pnpm turbo run build --filter=web...

@@ -5,5 +5,5 @@ Browser-friendly Dexie + MiniSearch utilities for Kosovo customs datasets. Expor
 ## Maintaining the dataset
 
 - Set `CUSTOMS_DATA_SOURCE_URL` (or `DATA_SOURCE_URL`) before running the fetch script.
-- Download the latest payload with `pnpm --filter @workspace/customs-data fetch-tarrifs`.
-- Normalize and deduplicate records with `pnpm --filter @workspace/customs-data trim-tarrifs`.
+- Refresh the dataset with `pnpm --filter @workspace/customs-data fetch-data` (fetches and trims).
+- Individual steps remain available via `pnpm --filter @workspace/customs-data fetch-tarrifs` and `trim-tarrifs`.

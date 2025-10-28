@@ -14,7 +14,8 @@
     "lint": "eslint src --max-warnings 0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "fetch-tarrifs": "node scripts/fetch-tarrifs.mjs",
-    "trim-tarrifs": "node scripts/trim-tarrifs.mjs"
+    "trim-tarrifs": "node scripts/trim-tarrifs.mjs",
+    "fetch-data": "node scripts/fetch-data.mjs"
   },
   "dependencies": {
     "dexie": "^4.0.8",
