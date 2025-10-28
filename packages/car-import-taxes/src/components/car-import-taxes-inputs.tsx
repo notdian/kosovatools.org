@@ -38,14 +38,12 @@ export interface CarImportTaxesInputsProps {
   onOtherFeesChange: (value: number) => void
 }
 
-interface TextInputChangeEvent {
-  target: { value: string }
-}
+type CheckboxCheckedState = Parameters<
+  NonNullable<React.ComponentProps<typeof Checkbox>["onCheckedChange"]>
+>[0]
 
-type CheckboxCheckedState = boolean | "indeterminate" | undefined
-
-function parseNumberFromEvent(event: TextInputChangeEvent): number {
-  const parsedValue = Number.parseFloat(event.target.value)
+function parseNumber(value: string): number {
+  const parsedValue = Number.parseFloat(value)
   return Number.isFinite(parsedValue) ? parsedValue : 0
 }
 
@@ -105,9 +103,7 @@ export function CarImportTaxesInputs({
               min={currentYear - CAR_IMPORT_CONSTANTS.MAX_VEHICLE_AGE}
               max={currentYear}
               value={Number.isFinite(vehicleYear) ? vehicleYear : currentYear}
-              onChange={(event: TextInputChangeEvent) =>
-                onVehicleYearChange(parseNumberFromEvent(event))
-              }
+              onChange={(event) => onVehicleYearChange(parseNumber(event.target.value))}
             />
             <p className="text-xs text-muted-foreground">
               Automjetet më të vjetra se {CAR_IMPORT_CONSTANTS.MAX_VEHICLE_AGE} vjet nuk
@@ -122,7 +118,7 @@ export function CarImportTaxesInputs({
                 "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
               )}
               value={`Euro ${euroStandard}`}
-              onChange={(event: TextInputChangeEvent) => {
+              onChange={(event) => {
                 const numericValue = Number.parseInt(event.target.value.replace(/[^0-9]/g, ""), 10)
                 onEuroStandardChange(
                   Number.isFinite(numericValue) ? numericValue : DEFAULT_EURO_STANDARD,
@@ -149,9 +145,7 @@ export function CarImportTaxesInputs({
                 "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
               )}
               value={fuelType}
-              onChange={(event: TextInputChangeEvent) =>
-                onFuelTypeChange(event.target.value as FuelType)
-              }
+              onChange={(event) => onFuelTypeChange(event.target.value as FuelType)}
             >
               <option value="petrol">Benzinë</option>
               <option value="diesel">Naftë</option>
@@ -167,10 +161,8 @@ export function CarImportTaxesInputs({
               min={0}
               step={1}
               value={Number.isFinite(engineCapacityCc) ? engineCapacityCc : 0}
-              onChange={(event: TextInputChangeEvent) =>
-                onEngineCapacityChange(
-                  Math.max(0, Math.round(parseNumberFromEvent(event))),
-                )
+              onChange={(event) =>
+                onEngineCapacityChange(Math.max(0, Math.round(parseNumber(event.target.value))))
               }
             />
             <p className="text-xs text-muted-foreground">
@@ -183,7 +175,7 @@ export function CarImportTaxesInputs({
             id="brand-new"
             checked={isBrandNew}
             onCheckedChange={(checked: CheckboxCheckedState) =>
-              onIsBrandNewChange(Boolean(checked))
+              onIsBrandNewChange(checked === true)
             }
           />
           <div className="space-y-1 text-sm">
@@ -213,9 +205,7 @@ export function CarImportTaxesInputs({
               min={0}
               step="0.01"
               value={Number.isFinite(purchasePrice) ? purchasePrice : 0}
-              onChange={(event: TextInputChangeEvent) =>
-                onPurchasePriceChange(parseNumberFromEvent(event))
-              }
+              onChange={(event) => onPurchasePriceChange(parseNumber(event.target.value))}
             />
           </div>
           <div className="grid gap-2">
@@ -226,9 +216,7 @@ export function CarImportTaxesInputs({
               min={0}
               step="0.01"
               value={Number.isFinite(shippingCost) ? shippingCost : 0}
-              onChange={(event: TextInputChangeEvent) =>
-                onShippingCostChange(parseNumberFromEvent(event))
-              }
+              onChange={(event) => onShippingCostChange(parseNumber(event.target.value))}
             />
           </div>
           <div className="grid gap-2">
@@ -239,9 +227,7 @@ export function CarImportTaxesInputs({
               min={0}
               step="0.01"
               value={Number.isFinite(insuranceCost) ? insuranceCost : 0}
-              onChange={(event: TextInputChangeEvent) =>
-                onInsuranceCostChange(parseNumberFromEvent(event))
-              }
+              onChange={(event) => onInsuranceCostChange(parseNumber(event.target.value))}
             />
           </div>
           <div className="grid gap-2">
@@ -253,13 +239,13 @@ export function CarImportTaxesInputs({
               step="0.01"
               value={declaredCif ?? ""}
               placeholder="Llogaritet automatikisht nëse lihet bosh"
-              onChange={(event: TextInputChangeEvent) => {
+              onChange={(event) => {
                 const value = event.target.value.trim()
                 if (value === "") {
                   onDeclaredCifChange(null)
                   return
                 }
-                onDeclaredCifChange(parseNumberFromEvent(event))
+                onDeclaredCifChange(parseNumber(value))
               }}
             />
             <p className="text-xs text-muted-foreground">
@@ -272,7 +258,7 @@ export function CarImportTaxesInputs({
             id="preferential-origin"
             checked={preferentialEuOrigin}
             onCheckedChange={(checked: CheckboxCheckedState) =>
-              onPreferentialEuOriginChange(Boolean(checked))
+              onPreferentialEuOriginChange(checked === true)
             }
           />
           <div className="space-y-1 text-sm">
@@ -302,9 +288,7 @@ export function CarImportTaxesInputs({
               min={0}
               step="0.01"
               value={Number.isFinite(ecoTax) ? ecoTax : CAR_IMPORT_CONSTANTS.annualFees.environmentalTax}
-              onChange={(event: TextInputChangeEvent) =>
-                onEcoTaxChange(parseNumberFromEvent(event))
-              }
+              onChange={(event) => onEcoTaxChange(parseNumber(event.target.value))}
             />
           </div>
           <div className="grid gap-2">
@@ -315,9 +299,7 @@ export function CarImportTaxesInputs({
               min={0}
               step="0.01"
               value={Number.isFinite(roadTax) ? roadTax : CAR_IMPORT_CONSTANTS.annualFees.roadTax.defaultPassenger}
-              onChange={(event: TextInputChangeEvent) =>
-                onRoadTaxChange(parseNumberFromEvent(event))
-              }
+              onChange={(event) => onRoadTaxChange(parseNumber(event.target.value))}
             />
           </div>
           <div className="grid gap-2">
@@ -328,9 +310,7 @@ export function CarImportTaxesInputs({
               min={0}
               step="0.01"
               value={Number.isFinite(otherFees) ? otherFees : 0}
-              onChange={(event: TextInputChangeEvent) =>
-                onOtherFeesChange(parseNumberFromEvent(event))
-              }
+              onChange={(event) => onOtherFeesChange(parseNumber(event.target.value))}
             />
           </div>
         </div>
