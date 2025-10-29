@@ -32,7 +32,7 @@ const FUEL_SPECS = {
   jet: { path_key: 'fuel_jet', label: 'Jet / kerosene' },
 };
 
-const USER_AGENT = 'kas-pxweb-fetch/1.1 (+https://example)';
+const USER_AGENT = 'kas-pxweb-fetch/1.1 (kosovatools.org)';
 
 export class PxError extends Error {}
 

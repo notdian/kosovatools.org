@@ -32,7 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       cache-key: ${{ steps.stats-key.outputs.key }}
-      cache-restore-keys: ${{ steps.stats-key.outputs.restore-keys }}
+      restore-primary: ${{ steps.stats-key.outputs.restore-primary }}
+      restore-fallback: ${{ steps.stats-key.outputs.restore-fallback }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -53,12 +54,8 @@ jobs:
             SUFFIX="$HASH"
           fi
           echo "key=$BASE-$SUFFIX" >> $GITHUB_OUTPUT
-          {
-            echo "restore-keys<<'EOF'" >> $GITHUB_OUTPUT
-            echo "$BASE-$HASH-" >> $GITHUB_OUTPUT
-            echo "stats-data-" >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
-          }
+          echo "restore-primary=$BASE-$HASH-" >> $GITHUB_OUTPUT
+          echo "restore-fallback=stats-data-" >> $GITHUB_OUTPUT
 
       - name: Restore cached KAS datasets
         id: cache-stats
@@ -66,7 +63,9 @@ jobs:
         with:
           path: packages/stats/data
           key: ${{ steps.stats-key.outputs.key }}
-          restore-keys: ${{ steps.stats-key.outputs.restore-keys }}
+          restore-keys: |
+            ${{ steps.stats-key.outputs.restore-primary }}
+            ${{ steps.stats-key.outputs.restore-fallback }}
 
       - name: Refresh KAS datasets
         if: steps.cache-stats.outputs.cache-hit != 'true'
@@ -76,7 +75,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       cache-key: ${{ steps.customs-key.outputs.key }}
-      cache-restore-keys: ${{ steps.customs-key.outputs.restore-keys }}
+      restore-primary: ${{ steps.customs-key.outputs.restore-primary }}
+      restore-fallback: ${{ steps.customs-key.outputs.restore-fallback }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -92,12 +92,8 @@ jobs:
             SUFFIX="$HASH"
           fi
           echo "key=$BASE-$SUFFIX" >> $GITHUB_OUTPUT
-          {
-            echo "restore-keys<<'EOF'" >> $GITHUB_OUTPUT
-            echo "$BASE-$HASH-" >> $GITHUB_OUTPUT
-            echo "customs-data-" >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
-          }
+          echo "restore-primary=$BASE-$HASH-" >> $GITHUB_OUTPUT
+          echo "restore-fallback=customs-data-" >> $GITHUB_OUTPUT
 
       - name: Restore cached customs dataset
         id: cache-customs
@@ -105,7 +101,9 @@ jobs:
         with:
           path: packages/customs-data/data
           key: ${{ steps.customs-key.outputs.key }}
-          restore-keys: ${{ steps.customs-key.outputs.restore-keys }}
+          restore-keys: |
+            ${{ steps.customs-key.outputs.restore-primary }}
+            ${{ steps.customs-key.outputs.restore-fallback }}
 
       - name: Set up Node.js
         if: steps.cache-customs.outputs.cache-hit != 'true' && github.event_name != 'pull_request'
@@ -140,14 +138,18 @@ jobs:
         with:
           path: packages/stats/data
           key: ${{ needs.fetch-stats-data.outputs.cache-key }}
-          restore-keys: ${{ needs.fetch-stats-data.outputs.cache-restore-keys }}
+          restore-keys: |
+            ${{ needs.fetch-stats-data.outputs.restore-primary }}
+            ${{ needs.fetch-stats-data.outputs.restore-fallback }}
 
       - name: Restore cached customs dataset
         uses: actions/cache/restore@v4
         with:
           path: packages/customs-data/data
           key: ${{ needs.fetch-customs-data.outputs.cache-key }}
-          restore-keys: ${{ needs.fetch-customs-data.outputs.cache-restore-keys }}
+          restore-keys: |
+            ${{ needs.fetch-customs-data.outputs.restore-primary }}
+            ${{ needs.fetch-customs-data.outputs.restore-fallback }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
