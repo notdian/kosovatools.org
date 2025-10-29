@@ -18,11 +18,10 @@ fully typed so UI surfaces can remain stateless and predictable.
 - `src/formatters/` — Reusable number/currency/energy formatters for charts and
   tables.
 - `data/` — Checked-in JSON snapshots (refresh via
-  `python packages/stats/scripts/fetch_kas.py --out packages/stats/data --months 36`).
+  `node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data --months 36`).
 - `docs/` — Spec documents that describe how a dataset maps onto charting
   requirements (e.g., `docs/kas_chart_specs.md`).
-- `scripts/` — Python utilities for fetching and inspecting KAS data. Install
-  requirements with `pip install -r packages/stats/requirements.txt`.
+- `scripts/` — Node.js utilities for fetching and inspecting KAS data.
 - Refresh cached JSON with `pnpm --filter @workspace/stats fetch-data` (defaults
   to the latest 36 months).
 
@@ -118,7 +117,7 @@ formatEuro(null)    // -> "—"
 
 1. Refresh data snapshots when inputs change:
    ```bash
-   python packages/stats/scripts/fetch_kas.py --out packages/stats/data --months 36
+   node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data --months 36
    ```
 2. Type-check:
    ```bash

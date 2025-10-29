@@ -30,7 +30,7 @@ Run `pnpm --filter web dev` for app-only development, `pnpm --filter web lint` t
 
 ### Working with Stats Data
 The `@workspace/stats` package centralizes Kosovo Agency of Statistics assets:
-- `packages/stats/scripts/` — Run `python scripts/fetch_kas.py --out data --months 36` to refresh local JSON snapshots (Python 3.11+ recommended; install deps with `pip install -r requirements.txt`).
+- `packages/stats/scripts/` — Run `node scripts/fetch_kas.mjs --out data --months 36` to refresh local JSON snapshots (Node.js 18+).
 - `packages/stats/data/` — Checked-in datasets for offline development and testing.
 - `packages/stats/docs/` — Chart specifications and notes to maintain parity between data and UI.
 

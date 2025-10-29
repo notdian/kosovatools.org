@@ -7,7 +7,7 @@ Kosova Tools uses pnpm and Turborepo to coordinate multiple packages. The Next.j
 Each citizen tool should ship as its own workspace package (e.g., `packages/customs-codes`, `packages/payroll`). For a new tool: copy the `packages/stats` layout, update `package.json` name/exports, add a `tsconfig` extending `@workspace/typescript-config/react-library.json`, and seed `src/index.ts` with typed exports. Re-export any UI building blocks through `packages/ui/src/components/<tool>/index.ts`, then consume the package inside `apps/web` by importing from `@workspace/<tool>`.
 
 ## Stats Data Lifecycle
-- Refresh Kosovo Agency of Statistics (KAS) sources by running `python packages/stats/scripts/fetch_kas.py --out packages/stats/data --months 36`. Scripts expect Python 3.11+ plus dependencies from `packages/stats/requirements.txt`.
+- Refresh Kosovo Agency of Statistics (KAS) sources by running `node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data --months 36`. Scripts require Node.js 18+.
 - Document visualization requirements in `packages/stats/docs/` (e.g., `kas_chart_specs.md`) so UI work aligns with dataset schemas.
 - Keep JSON snapshots in `packages/stats/data/` up to date; note retrieval dates inside `docs/data/README.md`.
 
