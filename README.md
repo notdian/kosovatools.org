@@ -12,12 +12,17 @@ Kosova Tools is a web platform that helps Kosovo residents discover and use prac
 apps/
   web/                # Next.js app (routes in app/, shared UI in components/, data helpers in lib/)
 packages/
-  ui/                 # shadcn/ui component library exports
-  stats/              # Cross-tool statistics/data helpers (import into web & other apps)
+  car-import-taxes/   # Car import tax calculator domain logic and exports
+  customs-codes/      # TARIC & customs code search experience
+  customs-data/       # Customs datasets and loaders
+  data-insights/      # Shared data visualizations and dashboards
+  payroll/            # Net wage calculator domain logic
+  stats/              # Cross-tool statistics/data helpers
+  ui/                 # shadcn/ui + bespoke primitives shared across tools
   eslint-config/      # Workspace ESLint presets
   typescript-config/  # Shared tsconfig bases
 ```
-Generated documentation for contributors lives in `AGENTS.md`.
+Generated documentation for contributors lives in `AGENTS.md`. Components, hooks, and domain logic should live in the package that owns them; only cross-cutting UI primitives belong in `packages/ui`.
 
 ## Getting Started
 1. **Install**: `pnpm install` (requires Node 20+ and pnpm 10.4).
@@ -26,7 +31,7 @@ Generated documentation for contributors lives in `AGENTS.md`.
 4. **Build Preview**: `pnpm build` executes Turbo build pipelines for production verification.
 
 ### Focusing on the Web App
-Run `pnpm --filter web dev` for app-only development, `pnpm --filter web lint` to target web linting, and `pnpm --filter web typecheck` for strict TypeScript validation. Shared UI primitives should be added inside `packages/ui/src/components` and re-exported through the package index.
+Run `pnpm --filter web dev` for app-only development, `pnpm --filter web lint` to target web linting, and `pnpm --filter web typecheck` for strict TypeScript validation. Shared UI primitives should be added inside `packages/ui/src/components` and re-exported through the package index; tool-specific components belong in their respective package directories.
 
 ### Working with Stats Data
 The `@workspace/stats` package centralizes Kosovo Agency of Statistics assets:
@@ -36,7 +41,7 @@ The `@workspace/stats` package centralizes Kosovo Agency of Statistics assets:
 
 ## Contributing
 - **Guidelines**: Follow the conventions in `AGENTS.md` for module structure, commit format, and PR expectations.
-- **Tool Packages**: Scaffold each tool as a dedicated package (e.g., `packages/customs-codes`) with a `package.json`, `tsconfig.json`, and `src/` exports. Re-export UI building blocks from `packages/ui`, then consume the package inside `apps/web`. When ready, wire build or typecheck scripts for the package into Turbo.
+- **Tool Packages**: Scaffold each tool as a dedicated package (e.g., `packages/customs-codes`) with a `package.json`, `tsconfig.json`, and `src/` exports. Re-export UI building blocks from `packages/ui`, then consume the package inside `apps/web`. When ready, wire build or typecheck scripts for the package into Turbo. Tool-specific UI and hooks should live within that package so ownership and data dependencies stay clear.
 - **Tool Stubs**: Create directories, fixtures, or mocks for new features, but avoid shipping unfinished production routes—use feature flags or draft routes under `app/(experimental)/`.
 - **Data Sources**: Document any new RKS datasets in the PR description and capture ingestion scripts or transformation steps inside `/docs/data`.
 
