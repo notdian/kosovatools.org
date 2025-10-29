@@ -144,23 +144,27 @@ export function WageCalculatorClient() {
         <CardHeader>
           <CardTitle>Si funksionon tatimi mbi pagat në Kosovë</CardTitle>
           <CardDescription>
-            Rregullat më poshtë përmbledhin legjislacionin aktual. Për raste të
-            veçanta konsultohuni me punëdhënësin ose me Administratën Tatimore
-            të Kosovës.
+            Rregullat më poshtë përmbledhin legjislacionin aktual (Ligji nr.
+            05/L-028 për tatimin në të ardhurat, Udhëzimi Administrativ MF
+            03/2015 për Trustin). Për raste të veçanta konsultohuni me
+            punëdhënësin ose me Administratën Tatimore të Kosovës.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-sm leading-relaxed text-muted-foreground">
           <p>
             Punëdhënësi dhe punonjësi kontribuojnë secili të paktën 5% të pagës
-            bruto në Trustin e Kursimeve të Kosovës. Totali minimal është 10%.
-            Kontributi i punonjësit zbritet përpara tatimit, prandaj tatimi mbi
-            të ardhurat llogaritet pasi hiqet kjo shumë nga paga bruto.
+            bruto në Trustin e Kursimeve të Kosovës. Totali minimal është 10%,
+            ndërsa shumave shtesë u mungon detyrimi ligjor, por shumë kompani
+            ofrojnë kontribute më të larta për benefite shtesë. Kontributi i
+            punonjësit zbritet përpara tatimit, prandaj tatimi mbi të ardhurat
+            llogaritet pasi hiqet kjo shumë nga paga bruto.
           </p>
           <p>
             Tatimi progresiv mbi pagat në Kosovë zbatohet sipas kufijve mujorë:
             0% për €0–€250, 8% për pjesën €250.01–€450 dhe 10% për çdo shumë mbi
             €450. Kalkulatori i aplikon automatikisht këto shkallë mbi të
-            ardhurat e tatueshme pas kontributit të punonjësit në Trust.
+            ardhurat e tatueshme pas kontributit të punonjësit në Trust dhe
+            shfaq një tabelë për secilin bllok tatimor.
           </p>
           <p>
             Të ardhurat nga punësimi sekondar tatohen me normë fikse 10% dhe nuk
@@ -168,6 +172,102 @@ export function WageCalculatorClient() {
             e aplikon këtë automatikisht kur e ndryshoni llojin e punësimit.
             Kontributet e punëdhënësit shfaqen për transparencë, por nuk zbriten
             nga paga juaj neto.
+          </p>
+          <div className="rounded-lg border border-dashed bg-muted/30 p-4">
+            <h2 className="text-sm font-semibold text-foreground">
+              Kujdes kur përdorni të dhënat
+            </h2>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
+              <li>
+                Përfitime të tjera (shujta, bonuse, pagesa shtesë) mund të kenë
+                trajtim të veçantë tatimor dhe nuk përfshihen këtu.
+              </li>
+              <li>
+                Tatimi i mbajtur në burim regjistrohet çdo muaj; pagat e prapambetura
+                ose pagesat njëherëshe mund të krijojnë detyrime shtesë.
+              </li>
+              <li>
+                Rezidentët që punojnë jashtë Kosovë ose kontraktorët pa kontratë të rregullt
+                duhet të kontrollojnë rregullat për vetë-deklarim te ATK.
+              </li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Këshilla praktike për pagat</CardTitle>
+          <CardDescription>
+            Shfrytëzoni kalkulatorin për të planifikuar marrëveshje pune dhe
+            negociata të pagave.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+          <p>
+            Përdorni opsionin &quot;Neto në bruto&quot; për të simuluar propozime pagash
+            kur punëdhënësi jep ofertën neto. Në këtë mënyrë mund të kontrolloni
+            shpejt se sa do të jetë kostoja për punëdhënësin dhe sa tatim paguhet.
+          </p>
+          <p>
+            Mbani shënim përqindjet reale të Trustit nga kontrata juaj të punës.
+            Disa kompani ofrojnë kontribute më të larta për punonjësin, ndërsa
+            të tjera kërkojnë që punonjësi të kontribuojë mbi minimumin 5%.
+          </p>
+          <p>
+            Nëse ndryshon numri i vendeve të punës gjatë vitit, ruani fletëpagesat.
+            Në fund të vitit fiskal, ATK kërkon verifikim të të ardhurave për
+            rimbursim ose detyrime shtesë. Dokumentet e pagës shërbejnë si bazë
+            për kontroll.
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Burime të dobishme</CardTitle>
+          <CardDescription>
+            Dokumentacioni zyrtar dhe udhëzues për tatimin në pagë dhe Trustin e
+            Kursimeve të Kosovës.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2 text-sm text-muted-foreground">
+          <ul className="list-disc space-y-1 pl-5">
+            <li>
+              <a
+                className="font-medium text-foreground underline underline-offset-4"
+                href="https://www.atk-ks.org/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Administrata Tatimore e Kosovës – Udhëzues për tatimin në pagë
+              </a>
+            </li>
+            <li>
+              <a
+                className="font-medium text-foreground underline underline-offset-4"
+                href="https://www.trusti.org/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Trusti i Kursimeve të Kosovës – Informacione për kontributet
+              </a>
+            </li>
+            <li>
+              <a
+                className="font-medium text-foreground underline underline-offset-4"
+                href="https://gzk.rks-gov.net/ActDocumentDetail.aspx?ActID=10910"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Ligji nr. 05/L-028 për Tatimin në të Ardhura Personale
+              </a>
+            </li>
+          </ul>
+          <p>
+            Për situata specifike (p.sh. kontrata afatshkurtra, punë sezonale,
+            pagesa me honorar), kërkoni këshilla profesionale ose konsultoni
+            direkt ATK-në.
           </p>
         </CardContent>
       </Card>
