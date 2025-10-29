@@ -27,6 +27,9 @@ concurrency:
   group: "pages-${{ github.ref }}"
   cancel-in-progress: true
 
+env:
+  NEXT_PUBLIC_BASE_URL: ${{ github.event_name == 'pull_request' && format('https://pr-{0}.preview.kosovatools.org', github.event.pull_request.number) || 'https://kosovatools.org' }}
+
 jobs:
   fetch-stats-data:
     runs-on: ubuntu-latest
@@ -170,6 +173,7 @@ jobs:
         run: pnpm turbo run build --filter=web...
         env:
           NEXT_TELEMETRY_DISABLED: "1"
+          NEXT_PUBLIC_BASE_URL: ${{ env.NEXT_PUBLIC_BASE_URL }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -201,3 +205,4 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           preview: true
+          preview_domain_prefix: "pr-${{ github.event.pull_request.number }}"
