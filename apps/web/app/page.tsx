@@ -87,7 +87,7 @@ const roadmap: RoadmapCard[] = [
     cta: "Suggest an idea",
     icon: Sparkles,
     category: "Ideas",
-    href: "https://github.com/notdian/kosovatools.org/issues/new/choose",
+    href: "https://github.com/kosovatools/kosovatools.org/issues/new/choose",
     external: true,
   },
 ]

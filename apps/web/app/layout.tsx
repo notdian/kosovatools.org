@@ -55,7 +55,7 @@ export default function RootLayout({
                     <ThemeToggle />
                     <a
                       className="inline-flex items-center gap-2 rounded-full border border-border/60 px-2.5 py-1 font-medium transition hover:border-primary hover:text-primary"
-                      href="https://github.com/notdian/kosovatools.org"
+                      href="https://github.com/kosovatools/kosovatools.org"
                       rel="noreferrer"
                       target="_blank"
                     >
